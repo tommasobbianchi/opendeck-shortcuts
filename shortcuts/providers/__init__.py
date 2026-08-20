@@ -2,7 +2,7 @@ import logging
 from typing import Protocol
 
 from ..model import Shortcut
-from . import curated, guessed, kitty, orca
+from . import curated, gtk, guessed, kitty, orca
 
 log = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class Provider(Protocol):
 
 # `guessed` is last: it only ever answers from its cache, and a real source that knows the
 # same combo outranks it anyway.
-PROVIDERS: list = [kitty, curated, orca, guessed]
+PROVIDERS: list = [kitty, curated, orca, gtk, guessed]
 
 _PROVENANCE_RANK = {"extracted": 3, "curated": 2, "guessed": 1}
 
