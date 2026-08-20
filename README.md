@@ -40,6 +40,7 @@ tests/
   conftest.py           turns the store off, so no test reaches the network
   test_providers.py     provider + resolve tests
   test_orca.py          OrcaSlicer provider tests
+  test_gtk.py           GTK shortcuts-window tests, against Nautilus's real UI
   test_opendeck.py      profile IO tests
   test_server.py        picker server tests
   test_icons.py         icon resolution tests
