@@ -32,14 +32,29 @@ def _serve_main(argv: list[str]) -> int:
 def _icons_main(argv: list[str]) -> int:
     from . import icons
 
+    from . import store
+
     parser = argparse.ArgumentParser(prog="shortcuts icons")
-    parser.add_argument("identity", help="app or app:program identity, e.g. 'orca'")
+    parser.add_argument("identity", nargs="?", help="app or app:program identity, e.g. 'orca'")
     parser.add_argument("--generate", action="store_true", help="generate missing icons (network, costs money)")
+    parser.add_argument("--publish", action="store_true",
+                        help=f"share what was generated to {store.DEFAULT_REPO} (publishes app and action names)")
     parser.add_argument("--limit", type=int, default=None, help="only resolve the first N shortcuts")
+    parser.add_argument("--store-list", action="store_true", help="list what the shared store holds, and exit")
     args = parser.parse_args(argv)
 
+    if args.store_list:
+        for path in store.published():
+            print(path)
+        return 0
+    if not args.identity:
+        parser.error("identity is required")
+    if args.publish and not args.generate:
+        parser.error("--publish has nothing to share without --generate")
+
     shortcuts = resolve(args.identity)
-    results = icons.resolve_many(shortcuts, generate_missing=args.generate, limit=args.limit)
+    results = icons.resolve_many(
+        shortcuts, generate_missing=args.generate, limit=args.limit, publish=args.publish)
     for sid, result in results.items():
         print(f"{sid}\t{result.origin}\t{'yes' if result.data_uri else 'no'}")
     return 0

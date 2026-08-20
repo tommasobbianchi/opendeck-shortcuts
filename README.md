@@ -14,7 +14,8 @@ An identity is either `app` (e.g. `kitty`) or `app:program` (e.g.
 shortcuts/
   model.py              Shortcut dataclass + Provenance literal
   keys.py               combo -> RON Token list encoder (the exact part)
-  icons.py              icon resolution: app art, then cache, then generated
+  icons.py              icon resolution: app art, then cache, then store, then generated
+  store.py              the shared icon store (fetch anonymous, publish opt-in)
   focus.py              which identities opendeck-focus has actually published
   opendeck.py           OpenDeck profile IO (read/write, no HTTP)
   server.py             localhost picker server
@@ -34,6 +35,8 @@ tests/
   test_keys.py          encoder tests
   test_focus.py         published-identity tests
   test_guessed.py       guessed-provider tests (no network)
+  test_store.py         shared-store tests (transport mocked)
+  conftest.py           turns the store off, so no test reaches the network
   test_providers.py     provider + resolve tests
   test_orca.py          OrcaSlicer provider tests
   test_opendeck.py      profile IO tests
@@ -96,8 +99,11 @@ Each key needs a 96x96 image. Three sources, in order, never guessing:
    own SVGs). Free, exact, offline. SVGs are rasterised through ImageMagick
    `convert`; `.png`/`.jpg`/`.jpeg`/`.webp` through Pillow.
 2. **Cache** — `~/.cache/opendeck-shortcuts/icons/<key>.png`, overridable by
-   `$OPENDECK_ICON_CACHE`. Anything generated once is never generated twice.
-3. **Generated** — only when explicitly asked for, via the local `infsh` binary.
+   `$OPENDECK_ICON_CACHE`. Anything resolved once is never resolved twice.
+3. **Store** — art someone already generated for this action, fetched from
+   [opendeck-icons](https://github.com/tommasobbianchi/opendeck-icons) and cached
+   on arrival. Anonymous, free, and skipped when the network is not there.
+4. **Generated** — only when explicitly asked for, via the local `infsh` binary.
    It costs money and needs the network, so it is never implicit.
 
 `python3 -m shortcuts icons <identity>` reports the origin of every key's icon
@@ -107,6 +113,34 @@ network calls at all; the generated prompt asks for a flat minimalist glyph with
 cached. `POST /api/apply` accepts `"generate": true` to allow step 3 and reports
 per-key origins as `{"icons": {"app": n, "cache": n, "generated": n, "none": n}}`;
 it defaults to false so applying never spends money unasked.
+
+## The shared store (`shortcuts/store.py`)
+
+Generating a glyph costs money and minutes; doing it again on the next machine costs the same
+for a byte-identical result. So generated art goes to a public repo, keyed by application and
+action at a readable path — `icons/orca/new_project.png` — and is fetched over
+`raw.githubusercontent.com` before anything is generated.
+
+Two boundaries hold it up:
+
+* **Only generated art may be published.** `store.publish` refuses any other origin. An
+  application's own icons are its own — OrcaSlicer's are AGPL, Chrome's a trademark — so they
+  are resolved locally on each machine and never uploaded. This is what lets the store be
+  public at all.
+* **Uploading is opt-in, every time.** A path names an app and an action, which is telemetry
+  about what you run. Fetching is anonymous; publishing takes `--publish` on the CLI or
+  `"publish": true` on `POST /api/apply`, and both need `--generate` first, since there is
+  nothing of ours to share otherwise.
+
+```sh
+python3 -m shortcuts icons orca --generate --publish   # share what this run generated
+python3 -m shortcuts icons --store-list                # what the store holds
+```
+
+`OPENDECK_ICON_STORE=0` turns it off for an offline or a private machine;
+`OPENDECK_ICON_REPO=owner/name` points at a different store. Hostile names cannot escape the
+store: every path segment is sanitised, so a `Shortcut` whose app is `../..` lands at
+`icons/unnamed/…`.
 
 ## The picker
 

@@ -1,12 +1,15 @@
-"""Icon resolution for the OpenDeck picker: app art, then cache, then generated.
+"""Icon resolution for the OpenDeck picker: app art, then cache, then store, then generated.
 
-Three sources, in order, and never guessing:
+Four sources, in order, and never guessing:
 
 1. App art -- ``Shortcut.icon``, the artwork the application itself ships.
    Free, exact, offline.
 2. Cache -- ``~/.cache/opendeck-shortcuts/icons/<key>.png``, overridable by
-   ``$OPENDECK_ICON_CACHE``. Anything generated once is never generated twice.
-3. Generated -- only when explicitly asked for; it costs money and needs the
+   ``$OPENDECK_ICON_CACHE``. Anything resolved once is never resolved twice.
+3. Store -- art someone already generated for this action, fetched from the
+   shared repo (see :mod:`shortcuts.store`) and cached locally on arrival.
+   Free, anonymous, and skipped when the network is not there.
+4. Generated -- only when explicitly asked for; it costs money and needs the
    network, so it is never implicit.
 
 Pillow is the one optional dependency, imported lazily so importing this module
@@ -26,6 +29,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib import request
 
+from . import store
+
 log = logging.getLogger(__name__)
 
 SIZE = 96
@@ -43,7 +48,7 @@ _UA = (
 @dataclass(frozen=True)
 class IconResult:
     data_uri: str | None
-    origin: str  # "app" | "cache" | "generated" | "none"
+    origin: str  # "app" | "cache" | "store" | "generated" | "none"
 
 
 def cache_key(shortcut) -> str:
@@ -180,7 +185,8 @@ def generate(shortcut, timeout: int = 300) -> bytes | None:
         return None
 
 
-def resolve(shortcut, generate_missing: bool = False) -> IconResult:
+def resolve(shortcut, generate_missing: bool = False, publish: bool = False) -> IconResult:
+    """Resolve one icon. ``publish`` offers a freshly generated one to the shared store."""
     if shortcut.icon:
         png = rasterise(shortcut.icon)
         if png is not None:
@@ -191,13 +197,29 @@ def resolve(shortcut, generate_missing: bool = False) -> IconResult:
             return IconResult(to_data_uri(cache_file.read_bytes()), "cache")
         except OSError:
             log.exception("could not read cached icon %s", cache_file)
+    shared = store.fetch(shortcut)
+    if shared is not None:
+        # Cache it under the same key as a generated one: where it came from is this run's
+        # business, not the next run's.
+        _cache_write(shortcut, shared)
+        return IconResult(to_data_uri(shared), "store")
     if generate_missing:
         png = generate(shortcut)
         if png is not None:
+            if publish and not store.publish(shortcut, png, "generated"):
+                log.warning("generated %s but could not publish it", shortcut.id)
             return IconResult(to_data_uri(png), "generated")
     return IconResult(None, "none")
 
 
-def resolve_many(shortcuts, generate_missing: bool = False, limit: int | None = None) -> dict[str, IconResult]:
+def resolve_many(
+    shortcuts,
+    generate_missing: bool = False,
+    limit: int | None = None,
+    publish: bool = False,
+) -> dict[str, IconResult]:
     selected = shortcuts if limit is None else shortcuts[:limit]
-    return {sc.id: resolve(sc, generate_missing=generate_missing) for sc in selected}
+    return {
+        sc.id: resolve(sc, generate_missing=generate_missing, publish=publish)
+        for sc in selected
+    }

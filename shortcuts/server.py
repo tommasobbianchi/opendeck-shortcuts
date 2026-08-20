@@ -259,7 +259,10 @@ def apply_payload(payload: dict) -> tuple[int, dict]:
 
     assignments = payload.get("assignments") or {}
     generate_missing = bool(payload.get("generate"))
-    origins = {"app": 0, "cache": 0, "generated": 0, "none": 0}
+    # Sharing publishes the application and action names, so it is a separate yes from
+    # spending money on generation.
+    publish = bool(payload.get("publish")) and generate_missing
+    origins = {"app": 0, "cache": 0, "store": 0, "generated": 0, "none": 0}
     written = 0
     for position in range(opendeck.FIRST_KEY, opendeck.LAST_KEY + 1):
         sid = assignments.get(str(position))
@@ -267,7 +270,7 @@ def apply_payload(payload: dict) -> tuple[int, dict]:
         if sc is None:
             keys[position] = None
         else:
-            result = icons.resolve(sc, generate_missing=generate_missing)
+            result = icons.resolve(sc, generate_missing=generate_missing, publish=publish)
             keys[position] = opendeck.input_key(position, sc.label, sc.tokens, result.data_uri)
             origins[result.origin] += 1
             written += 1
