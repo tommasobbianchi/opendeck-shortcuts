@@ -7,6 +7,25 @@ from .providers import resolve
 
 
 def main(argv: list[str] | None = None) -> int:
+    if argv is None:
+        argv = sys.argv[1:]
+    if argv and argv[0] == "serve":
+        return _serve_main(argv[1:])
+    return _catalogue_main(argv)
+
+
+def _serve_main(argv: list[str]) -> int:
+    from . import server
+
+    parser = argparse.ArgumentParser(prog="shortcuts serve")
+    parser.add_argument("--identity", help="default identity for the picker")
+    parser.add_argument("--port", type=int, default=8767, help="first port to try (default 8767)")
+    parser.add_argument("--no-browser", action="store_true", help="do not open a browser")
+    args = parser.parse_args(argv)
+    return server.serve(port=args.port, identity=args.identity, no_browser=args.no_browser)
+
+
+def _catalogue_main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(prog="shortcuts")
     parser.add_argument("identity", nargs="?", help="app or app:program identity, e.g. 'kitty' or 'kitty:claude'")
     parser.add_argument("--json", action="store_true", help="emit full records including tokens")

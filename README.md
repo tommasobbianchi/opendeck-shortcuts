@@ -14,6 +14,9 @@ An identity is either `app` (e.g. `kitty`) or `app:program` (e.g.
 shortcuts/
   model.py              Shortcut dataclass + Provenance literal
   keys.py               combo -> RON Token list encoder (the exact part)
+  opendeck.py           OpenDeck profile IO (read/write, no HTTP)
+  server.py             localhost picker server
+  assets/picker.html    the picker page (inline CSS + JS)
   providers/
     __init__.py         Provider protocol + resolve()
     kitty.py            extracts `map` lines from the kitty config
@@ -28,6 +31,8 @@ tests/
   test_keys.py          encoder tests
   test_providers.py     provider + resolve tests
   test_orca.py          OrcaSlicer provider tests
+  test_opendeck.py      profile IO tests
+  test_server.py        picker server tests
   fixtures/kitty.conf   the user's real kitty config
   fixtures/KBShortcutsDialog_excerpt.cpp
 ```
@@ -42,6 +47,23 @@ python3 -m shortcuts --check 'ctrl+shift+o'
 ```
 
 `--check` exits non-zero when the combo is rejected.
+
+## The picker
+
+```sh
+python3 -m shortcuts serve [--identity X] [--port N] [--no-browser]
+```
+
+Serves a localhost page that lists an identity's shortcuts and lets you drag them
+onto the 15 assignable deck keys, then writes the OpenDeck profile and the
+application mapping. Binds 127.0.0.1 only, tries the next ten ports if the
+default 8767 is taken, and opens the browser unless `--no-browser` is given.
+
+The deck is a numpad in portrait: the top strip holds two reserved screen
+buttons (Launcher, Auto) and the encoder's screen (Dial), then 5 rows of 3 main
+keys. Positions 0-2 are reserved and never written; only 3-17 are assignable.
+Nothing is written until Apply is pressed, and Apply is refused while OpenDeck is
+running because it rewrites profiles from memory on exit.
 
 ## The encoder (`shortcuts/keys.py`)
 

@@ -74,6 +74,11 @@ def _resolve_cpp() -> tuple[str | None, str | None]:
     return None, None
 
 
+def source_tree() -> str | None:
+    """Root of the OrcaSlicer checkout in use, or None when answering from the snapshot."""
+    return _resolve_cpp()[1]
+
+
 def _blocks(text: str) -> list[tuple[str, list[str]]]:
     lines = text.splitlines()
     blocks: list[tuple[str, list[str]]] = []
