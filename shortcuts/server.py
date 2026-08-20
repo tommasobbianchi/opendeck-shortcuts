@@ -17,7 +17,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from . import icons, opendeck
+from . import focus, icons, opendeck
 from .providers import orca, resolve
 
 HERE = Path(__file__).resolve().parent
@@ -145,6 +145,13 @@ class Handler(BaseHTTPRequestHandler):
                     query.get("device", [""])[0],
                 )
             )
+        elif parsed.path == "/api/identities":
+            self._send_json(
+                {
+                    "identities": focus.identities(),
+                    "warning": focus.warning_for(query.get("identity", [""])[0]),
+                }
+            )
         elif parsed.path == "/api/devices":
             self._send_json(opendeck.devices())
         elif parsed.path == "/api/icon":
@@ -264,7 +271,16 @@ def apply_payload(payload: dict) -> tuple[int, dict]:
     except RuntimeError as exc:
         return 409, {"ok": False, "error": str(exc)}
     opendeck.map_application(identity, device, profile)
-    return 200, {"ok": True, "profile": profile, "written": written, "icons": origins}
+    # Applying still goes through: setting up an app before its first focus is legitimate, and
+    # the mapping starts working the moment the daemon publishes that class. The warning is so
+    # a name that will never match does not look like success.
+    return 200, {
+        "ok": True,
+        "profile": profile,
+        "written": written,
+        "icons": origins,
+        "warning": focus.warning_for(identity),
+    }
 
 
 def make_server(host: str = "127.0.0.1", port: int = 0) -> ThreadingHTTPServer:

@@ -39,6 +39,11 @@
   #apply { background: var(--accent); border-color: var(--accent); color: #08111f; font-weight: 600; }
   #result { font-size: 13px; }
   #result.ok { color: var(--ok); }
+  #identitywarning {
+    display: none; width: 100%; margin-top: 6px; padding: 5px 9px; border-radius: 4px;
+    font-size: 12px; color: var(--warn); border: 1px solid var(--warn); background: #2a1f0d;
+  }
+  #identitywarning.show { display: block; }
   #result.err { color: var(--danger); }
 
   main { display: flex; gap: 18px; padding: 18px; align-items: flex-start; }
@@ -100,10 +105,12 @@
 <body>
 <header>
   <h1>OpenDeck Shortcuts</h1>
-  <label class="field">identity <input id="identity" spellcheck="false" placeholder="e.g. kitty:claude"></label>
+  <label class="field">identity <input id="identity" list="published" spellcheck="false" placeholder="e.g. kitty:claude"></label>
+  <datalist id="published"></datalist>
   <label class="field">device <select id="device"></select></label>
   <button id="apply">Apply</button>
   <span id="result"></span>
+  <div id="identitywarning"></div>
 </header>
 
 <main>
@@ -294,6 +301,28 @@
     $("identity").value = state.identity;
   }
 
+  // OpenDeck matches an application by the class opendeck-focus publishes, so offer those
+  // names rather than letting a catalogue name like "orca" be typed into a mapping that can
+  // never fire.
+  async function loadIdentities() {
+    const data = await fetchJSON(
+      "/api/identities?identity=" + encodeURIComponent(state.identity || ""));
+    const list = $("published");
+    list.innerHTML = "";
+    for (const name of data.identities || []) {
+      const option = document.createElement("option");
+      option.value = name;
+      list.appendChild(option);
+    }
+    showWarning(data.warning);
+  }
+
+  function showWarning(text) {
+    const box = $("identitywarning");
+    box.textContent = text || "";
+    box.classList.toggle("show", Boolean(text));
+  }
+
   async function loadDevices() {
     const devs = await fetchJSON("/api/devices");
     const sel = $("device");
@@ -344,6 +373,7 @@
     if (r.ok) {
       result.className = "ok";
       result.textContent = `Applied ${data.written} key(s) to profile "${data.profile}".`;
+      showWarning(data.warning);
     } else {
       result.className = "err";
       result.textContent = data.error || "Apply failed.";
@@ -355,6 +385,7 @@
   $("catfilter").addEventListener("change", renderList);
   $("identity").addEventListener("change", () => {
     state.identity = $("identity").value.trim();
+    loadIdentities();
     loadShortcuts();
   });
   $("device").addEventListener("change", () => {
@@ -365,6 +396,7 @@
 
   window.addEventListener("DOMContentLoaded", async () => {
     await loadIdentity();
+    await loadIdentities();
     await loadDevices();
     if (state.identity) await loadShortcuts();
     renderDeck();

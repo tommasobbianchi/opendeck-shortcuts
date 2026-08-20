@@ -43,6 +43,27 @@ class ServerTestCase(unittest.TestCase):
             return resp.status, json.loads(resp.read().decode("utf-8"))
 
 
+class TestIdentities(ServerTestCase):
+    def _publish(self, seen):
+        path = Path(self.tmp) / "seen.json"
+        path.write_text(json.dumps(seen), encoding="utf-8")
+        os.environ["OPENDECK_FOCUS_SEEN"] = str(path)
+        self.addCleanup(os.environ.pop, "OPENDECK_FOCUS_SEEN", None)
+
+    def test_the_route_lists_what_the_daemon_published(self):
+        self._publish({"OrcaSlicer": 10, "kitty:claude": 30})
+        status, body = self._get_json("/api/identities")
+        self.assertEqual(status, 200)
+        self.assertEqual(body["identities"], ["kitty:claude", "OrcaSlicer"])
+        self.assertIsNone(body["warning"], "asking for the list is not asking about a name")
+
+    def test_the_route_warns_about_a_name_that_will_never_match(self):
+        self._publish({"OrcaSlicer": 10})
+        status, body = self._get_json("/api/identities?identity=orca")
+        self.assertEqual(status, 200)
+        self.assertIn("OrcaSlicer", body["warning"])
+
+
 class TestIndex(ServerTestCase):
     def test_serves_picker_html(self):
         with _request(self.base + "/") as resp:
@@ -101,6 +122,22 @@ class TestApply(ServerTestCase):
 
         apps = json.loads((Path(self.tmp) / "applications.json").read_text())
         self.assertEqual(apps["chrome"]["n1-test"], "chrome")
+
+    def test_apply_succeeds_but_says_the_mapping_will_never_fire(self):
+        # "chrome" is a catalogue name; the daemon publishes "google-chrome". Applying is
+        # still allowed -- you may be setting up an app before its first focus -- but the
+        # answer has to say so, or a mapping that can never match looks like success.
+        seen = Path(self.tmp) / "seen.json"
+        seen.write_text(json.dumps({"google-chrome": 10}), encoding="utf-8")
+        os.environ["OPENDECK_FOCUS_SEEN"] = str(seen)
+        self.addCleanup(os.environ.pop, "OPENDECK_FOCUS_SEEN", None)
+
+        body = {"identity": "chrome", "device": "n1-test", "assignments": {"3": "chrome.new_tab"}}
+        with _request(self.base + "/api/apply", method="POST", body=body) as resp:
+            payload = json.loads(resp.read().decode("utf-8"))
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["written"], 1)
+        self.assertIn("google-chrome", payload["warning"])
 
     def test_apply_refuses_when_opendeck_running(self):
         body = {"identity": "chrome", "device": "n1-test", "assignments": {"3": "chrome.new_tab"}}
