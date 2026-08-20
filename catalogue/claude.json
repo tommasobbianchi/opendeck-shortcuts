@@ -1,0 +1,14 @@
+{
+  "app": "claude",
+  "source": "https://code.claude.com/docs/en/interactive-mode",
+  "shortcuts": [
+    {"id": "claude.submit", "label": "Submit prompt", "combo": "return"},
+    {"id": "claude.interrupt", "label": "Interrupt response", "combo": "escape"},
+    {"id": "claude.cancel", "label": "Cancel / interrupt", "combo": "ctrl+c"},
+    {"id": "claude.exit", "label": "Exit Claude Code", "combo": "ctrl+d"},
+    {"id": "claude.clear_screen", "label": "Clear screen", "combo": "ctrl+l"},
+    {"id": "claude.permission_mode", "label": "Cycle permission mode", "combo": "shift+tab"},
+    {"id": "claude.verbose", "label": "Toggle verbose output", "combo": "ctrl+r"},
+    {"id": "claude.expand_output", "label": "Expand full output", "combo": "ctrl+o"}
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "app": "chrome",
+  "source": "https://support.google.com/chrome/answer/157179",
+  "shortcuts": [
+    {"id": "chrome.new_tab", "label": "New tab", "combo": "ctrl+t"},
+    {"id": "chrome.close_tab", "label": "Close tab", "combo": "ctrl+w"},
+    {"id": "chrome.reopen_closed_tab", "label": "Reopen closed tab", "combo": "ctrl+shift+t"},
+    {"id": "chrome.next_tab", "label": "Next tab", "combo": "ctrl+tab"},
+    {"id": "chrome.previous_tab", "label": "Previous tab", "combo": "ctrl+shift+tab"},
+    {"id": "chrome.address_bar", "label": "Address bar", "combo": "ctrl+l"},
+    {"id": "chrome.find", "label": "Find", "combo": "ctrl+f"},
+    {"id": "chrome.reload", "label": "Reload", "combo": "ctrl+r"},
+    {"id": "chrome.devtools", "label": "Developer tools", "combo": "ctrl+shift+i"},
+    {"id": "chrome.incognito", "label": "Incognito window", "combo": "ctrl+shift+n"}
+  ]
+}
