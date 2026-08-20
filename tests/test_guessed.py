@@ -7,6 +7,28 @@ from unittest import mock
 from shortcuts.providers import guessed, resolve
 
 
+class AppNameTestCase(unittest.TestCase):
+    """A WM_CLASS is rarely the name of anything a model has heard of."""
+
+    def test_reverse_dns_keeps_only_the_application(self):
+        self.assertEqual(guessed.app_name("org.gnome.Nautilus"), "Nautilus")
+        self.assertEqual(guessed.app_name("com.discordapp.Discord"), "Discord")
+
+    def test_a_snap_stops_saying_its_own_name_twice(self):
+        self.assertEqual(guessed.app_name("telegram-desktop_telegram-desktop"), "telegram desktop")
+
+    def test_a_terminal_identity_asks_about_the_program_not_the_terminal(self):
+        self.assertEqual(guessed.app_name("kitty:claude"), "claude")
+
+    def test_an_ordinary_name_is_left_alone_apart_from_separators(self):
+        self.assertEqual(guessed.app_name("WhatsApp Desktop"), "WhatsApp Desktop")
+        self.assertEqual(guessed.app_name("google-chrome"), "google chrome")
+        self.assertEqual(guessed.app_name("OrcaBelt2608"), "OrcaBelt2608")
+
+    def test_the_prompt_asks_about_the_readable_name(self):
+        self.assertIn('"Nautilus"', guessed.prompt_for("org.gnome.Nautilus"))
+
+
 class CleanTestCase(unittest.TestCase):
     def test_a_combo_the_encoder_rejects_never_reaches_a_key(self):
         raw = {"shortcuts": [

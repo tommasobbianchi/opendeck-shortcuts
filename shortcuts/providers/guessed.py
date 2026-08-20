@@ -90,8 +90,30 @@ def _records(segment: str, data: dict) -> list[Shortcut]:
     return out
 
 
+def app_name(segment: str) -> str:
+    """The identity as a person would name the application.
+
+    An identity is a WM_CLASS, and those are rarely the name of anything: GNOME publishes
+    reverse-DNS (`org.gnome.Nautilus`), snaps publish the package twice
+    (`telegram-desktop_telegram-desktop`). Asking a model about those strings verbatim is
+    asking about something it has never heard of, and it answers accordingly -- with nothing,
+    or with a stall.
+    """
+    name = segment.split(":")[-1].strip()
+    # snap: <package>_<package>, sometimes <package>_<binary>
+    if "_" in name:
+        head, _, tail = name.partition("_")
+        if head == tail:
+            name = head
+    # reverse-DNS: org.gnome.Nautilus, com.discordapp.Discord
+    parts = name.split(".")
+    if len(parts) >= 3 and all(parts[:-1]):
+        name = parts[-1]
+    return name.replace("-", " ").replace("_", " ").strip() or segment
+
+
 def prompt_for(segment: str) -> str:
-    app = segment.split(":")[-1]
+    app = app_name(segment)
     return (
         f'List the most useful keyboard shortcuts of the application "{app}" on Linux.\n'
         "Only shortcuts you are confident actually exist in that application. "
@@ -123,6 +145,9 @@ def _ask(segment: str, model: str, host: str, timeout: int) -> dict | None:
             answer = json.load(response)
     except urllib.error.URLError as error:
         log.error("no local model at %s (%s); cannot guess %s", host, error, segment)
+        return None
+    except TimeoutError:
+        log.error("%s did not answer about %s within %ds", model, segment, timeout)
         return None
     except Exception:
         log.exception("asking %s for %s failed", model, segment)
