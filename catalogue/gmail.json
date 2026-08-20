@@ -1,0 +1,24 @@
+{
+  "app": "gmail",
+  "source": "https://support.google.com/mail/answer/6594 (needs Settings > Keyboard shortcuts on)",
+  "shortcuts": [
+    {"id": "gmail.compose", "label": "Compose", "combo": "c"},
+    {"id": "gmail.send", "label": "Send", "combo": "ctrl+return"},
+    {"id": "gmail.search", "label": "Search mail", "combo": "/"},
+    {"id": "gmail.reply", "label": "Reply", "combo": "r"},
+    {"id": "gmail.reply_all", "label": "Reply all", "combo": "a"},
+    {"id": "gmail.forward", "label": "Forward", "combo": "f"},
+    {"id": "gmail.archive", "label": "Archive", "combo": "e"},
+    {"id": "gmail.delete", "label": "Delete", "combo": "#"},
+    {"id": "gmail.star", "label": "Star", "combo": "s"},
+    {"id": "gmail.select", "label": "Select conversation", "combo": "x"},
+    {"id": "gmail.mute", "label": "Mute thread", "combo": "m"},
+    {"id": "gmail.spam", "label": "Report spam", "combo": "!"},
+    {"id": "gmail.older", "label": "Older conversation", "combo": "j"},
+    {"id": "gmail.newer", "label": "Newer conversation", "combo": "k"},
+    {"id": "gmail.back_to_list", "label": "Back to list", "combo": "u"},
+    {"id": "gmail.label", "label": "Label as", "combo": "l"},
+    {"id": "gmail.move_to", "label": "Move to", "combo": "v"},
+    {"id": "gmail.insert_link", "label": "Insert link", "combo": "ctrl+k"}
+  ]
+}

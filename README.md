@@ -30,6 +30,9 @@ shortcuts/
 catalogue/
   chrome.json           curated Chrome bindings
   claude.json           curated Claude Code bindings
+  gmail.json            from Google's own shortcut page
+  youtube.json          from YouTube's own shortcut page
+  onshape.json          from Onshape's own shortcut page
   opencode.json         opencode defaults, read out of the 1.18.18 binary
   orca.snapshot.json    OrcaSlicer fallback, for machines with no source tree
 tests/

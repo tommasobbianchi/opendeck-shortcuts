@@ -1,0 +1,22 @@
+{
+  "app": "youtube",
+  "source": "https://support.google.com/youtube/answer/7631406",
+  "shortcuts": [
+    {"id": "youtube.play_pause", "label": "Play / Pause", "combo": "k"},
+    {"id": "youtube.mute", "label": "Mute", "combo": "m"},
+    {"id": "youtube.fullscreen", "label": "Full screen", "combo": "f"},
+    {"id": "youtube.captions", "label": "Captions", "combo": "c"},
+    {"id": "youtube.back_10", "label": "Back 10s", "combo": "j"},
+    {"id": "youtube.forward_10", "label": "Forward 10s", "combo": "l"},
+    {"id": "youtube.next_video", "label": "Next video", "combo": "shift+n"},
+    {"id": "youtube.previous_video", "label": "Previous video", "combo": "shift+p"},
+    {"id": "youtube.faster", "label": "Speed up", "combo": ">"},
+    {"id": "youtube.slower", "label": "Slow down", "combo": "<"},
+    {"id": "youtube.next_frame", "label": "Next frame", "combo": "."},
+    {"id": "youtube.previous_frame", "label": "Previous frame", "combo": ","},
+    {"id": "youtube.search", "label": "Search", "combo": "/"},
+    {"id": "youtube.restart", "label": "Restart video", "combo": "0"},
+    {"id": "youtube.next_chapter", "label": "Next chapter", "combo": "ctrl+right"},
+    {"id": "youtube.previous_chapter", "label": "Previous chapter", "combo": "ctrl+left"}
+  ]
+}

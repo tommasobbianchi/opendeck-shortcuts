@@ -1,0 +1,26 @@
+{
+  "app": "onshape",
+  "source": "https://cad.onshape.com/help/Content/shortcut_keys.htm",
+  "shortcuts": [
+    {"id": "onshape.sketch", "label": "Sketch", "combo": "shift+s"},
+    {"id": "onshape.extrude", "label": "Extrude", "combo": "shift+e"},
+    {"id": "onshape.revolve", "label": "Revolve", "combo": "shift+w"},
+    {"id": "onshape.fillet", "label": "Fillet", "combo": "shift+f"},
+    {"id": "onshape.line", "label": "Line", "combo": "l"},
+    {"id": "onshape.circle", "label": "Circle", "combo": "c"},
+    {"id": "onshape.rectangle", "label": "Rectangle", "combo": "r"},
+    {"id": "onshape.dimension", "label": "Dimension", "combo": "d"},
+    {"id": "onshape.construction", "label": "Construction", "combo": "q"},
+    {"id": "onshape.isometric", "label": "Isometric view", "combo": "shift+7"},
+    {"id": "onshape.front_view", "label": "Front view", "combo": "shift+1"},
+    {"id": "onshape.right_view", "label": "Right view", "combo": "shift+4"},
+    {"id": "onshape.hide_sketches", "label": "Show/hide sketches", "combo": "shift+h"},
+    {"id": "onshape.planes", "label": "Show/hide planes", "combo": "p"},
+    {"id": "onshape.mate_connectors", "label": "Mate connectors", "combo": "k"},
+    {"id": "onshape.measure", "label": "Measure", "combo": "["},
+    {"id": "onshape.commit", "label": "Commit command", "combo": "return"},
+    {"id": "onshape.exit", "label": "Exit command", "combo": "escape"},
+    {"id": "onshape.redo", "label": "Redo", "combo": "ctrl+y"},
+    {"id": "onshape.transparent", "label": "Make transparent", "combo": "shift+t"}
+  ]
+}

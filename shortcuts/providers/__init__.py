@@ -35,7 +35,10 @@ def resolve(identity: str, build_missing: bool = False) -> list[Shortcut]:
     surprise.
     """
     by_key: dict = {}
-    for segment in identity.split(":"):
+    # Most specific segment first. `google-chrome:gmail` is a Gmail window that happens to be in
+    # Chrome, and a deck with room for fifteen keys should spend them on Gmail before it spends
+    # them on New Tab. Same for `kitty:claude`.
+    for segment in reversed(identity.split(":")):
         if not segment:
             continue
         before = len(by_key)
