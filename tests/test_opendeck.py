@@ -157,3 +157,18 @@ class PushImageTestCase(unittest.TestCase):
         with mock.patch.object(opendeck, "binary", return_value="/usr/bin/opendeck"), \
              mock.patch.object(opendeck.subprocess, "run", side_effect=OSError("boom")):
             self.assertFalse(opendeck.push_image("dev1", "prof", 6, "data:x"))
+
+
+class CaptionTestCase(unittest.TestCase):
+    """OpenDeck draws the label on top of the image when it renders the key screen."""
+
+    def test_a_key_with_art_carries_no_text_to_scrawl_over_it(self):
+        key = opendeck.input_key(3, "Clear screen", "[Key(Control, Click)]",
+                                 "data:image/png;base64,AAAA")
+        self.assertEqual(key["states"][0]["text"], "")
+        self.assertEqual(key["action"]["tooltip"], "Clear screen",
+                         "the label survives where it does not obscure anything")
+
+    def test_a_key_with_no_art_still_says_what_it_is(self):
+        key = opendeck.input_key(3, "Clear screen", "[Key(Control, Click)]", None)
+        self.assertEqual(key["states"][0]["text"], "Clear screen")

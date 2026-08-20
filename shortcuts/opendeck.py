@@ -180,8 +180,19 @@ def _state(image: str, text: str = "") -> dict:
 
 
 def input_key(position: int, label: str, ron: str, icon: str | None) -> dict:
-    """Build the OpenDeck key record for the Starter Pack's Simulate Input action."""
+    """Build the OpenDeck key record for the Starter Pack's Simulate Input action.
+
+    A key that has a picture does not get a caption. OpenDeck renders the bitmap for the key
+    screen by drawing `text` on top of `image`, so a label over a 96x96 glyph is not a caption
+    under it -- it is scrawled across the middle of the drawing. OpenDeck's own profiles work
+    the same way: its icon keys carry an empty text, and only the keys with no art carry words.
+
+    The label is not lost: it stays in the action tooltip, it is what the picker lists, and a
+    key with no icon still gets it, because a blank key that says nothing is worse than a
+    cluttered one.
+    """
     image = _absolute_image(icon)
+    caption = "" if image else label
     return {
         "action": {
             "controllers": ["Keypad", "Encoder"],
@@ -203,7 +214,7 @@ def input_key(position: int, label: str, ron: str, icon: str | None) -> dict:
         "context": f"Keypad.{position}.0",
         "current_state": 0,
         "settings": {"down": ron, "up": "", "anticlockwise": "", "clockwise": ""},
-        "states": [_state(image, label)],
+        "states": [_state(image, caption)],
     }
 
 
