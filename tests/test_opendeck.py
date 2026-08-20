@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import tempfile
@@ -91,6 +92,38 @@ class TestDevices(OpendeckTestCase):
         (opendeck._config_dir() / "profiles" / "n1-abc").mkdir(parents=True)
         (opendeck._config_dir() / "profiles" / "n1-def").mkdir(parents=True)
         self.assertEqual(opendeck.devices(), ["n1-abc", "n1-def"])
+
+
+class ProfileShapeTestCase(unittest.TestCase):
+    """A profile OpenDeck will load, not one it will silently replace."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        os.environ["OPENDECK_CONFIG"] = self.tmp
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        self.addCleanup(os.environ.pop, "OPENDECK_CONFIG", None)
+
+    def test_a_new_profile_carries_every_field_opendeck_deserialises(self):
+        # Writing only `keys` looks fine on disk and survives exactly until OpenDeck restarts,
+        # at which point the whole profile is replaced by an empty one and the keys are gone.
+        data = opendeck.load_profile("dev", "brand_new")
+        self.assertEqual(sorted(data), ["infobars", "keys", "sliders"])
+        self.assertEqual(len(data["keys"]), 18)
+        self.assertEqual(data["sliders"], [None], "the knob is an encoder slot, not nothing")
+
+    def test_a_profile_written_before_this_was_understood_is_repaired_on_read(self):
+        path = opendeck.profile_path("dev", "legacy")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({"keys": [None] * 18}), encoding="utf-8")
+        data = opendeck.load_profile("dev", "legacy")
+        self.assertEqual(sorted(data), ["infobars", "keys", "sliders"])
+
+    def test_what_the_app_already_wrote_is_left_alone(self):
+        path = opendeck.profile_path("dev", "theirs")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        original = {"infobars": [{"x": 1}], "keys": [None] * 18, "sliders": [None]}
+        path.write_text(json.dumps(original), encoding="utf-8")
+        self.assertEqual(opendeck.load_profile("dev", "theirs"), original)
 
 
 if __name__ == "__main__":

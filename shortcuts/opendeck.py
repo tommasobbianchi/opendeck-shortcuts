@@ -26,6 +26,22 @@ _INPUT_SIMULATION_UUID = "com.amansprojects.starterpack.inputsimulation"
 
 _EMPTY_KEYS = [None] * 18
 
+#: A profile OpenDeck will actually load. It deserialises the file into a struct with all
+#: three fields, and a file missing any of them is not "a profile with defaults" -- it is
+#: replaced wholesale by an empty one, silently, the next time OpenDeck starts. That is how a
+#: freshly created profile lost every key it had just been given: writing only `keys` looked
+#: fine on disk and survived exactly until the app came back.
+_EMPTY_SLIDERS = [None]     # the one encoder: the knob
+_EMPTY_INFOBARS: list = []
+
+
+def empty_profile() -> dict:
+    return {
+        "infobars": list(_EMPTY_INFOBARS),
+        "keys": list(_EMPTY_KEYS),
+        "sliders": list(_EMPTY_SLIDERS),
+    }
+
 
 def _config_dir() -> Path:
     override = os.environ.get("OPENDECK_CONFIG")
@@ -48,11 +64,17 @@ def load_profile(device: str, profile: str) -> dict:
     """Read a profile; a missing file is an empty profile, not an error."""
     path = profile_path(device, profile)
     if not path.is_file():
-        return {"keys": list(_EMPTY_KEYS)}
+        return empty_profile()
     data = json.loads(path.read_text(encoding="utf-8"))
     keys = data.get("keys")
     if not isinstance(keys, list):
         data["keys"] = list(_EMPTY_KEYS)
+    # An older profile, or one we wrote before this was understood, gets the missing fields
+    # rather than being handed back in a shape OpenDeck will throw away.
+    if not isinstance(data.get("sliders"), list):
+        data["sliders"] = list(_EMPTY_SLIDERS)
+    if not isinstance(data.get("infobars"), list):
+        data["infobars"] = list(_EMPTY_INFOBARS)
     return data
 
 
