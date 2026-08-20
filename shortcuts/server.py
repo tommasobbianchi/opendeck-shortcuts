@@ -157,6 +157,13 @@ class Handler(BaseHTTPRequestHandler):
                     "warning": focus.warning_for(query.get("identity", [""])[0]),
                 }
             )
+        elif parsed.path == "/api/variants":
+            self._send_json(
+                variants_payload(
+                    query.get("identity", [""])[0],
+                    query.get("id", [""])[0],
+                )
+            )
         elif parsed.path == "/api/devices":
             self._send_json(opendeck.devices())
         elif parsed.path == "/api/icon":
@@ -168,7 +175,16 @@ class Handler(BaseHTTPRequestHandler):
         if not self._host_ok():
             self.send_error(403, "forbidden host")
             return
-        if urlparse(self.path).path != "/api/apply":
+        route = urlparse(self.path).path
+        if route == "/api/variants":
+            status, body = draw_payload(self._read_json())
+            self._send_json(body, status)
+            return
+        if route == "/api/choose":
+            status, body = choose_payload(self._read_json())
+            self._send_json(body, status)
+            return
+        if route != "/api/apply":
             self.send_error(404, "not found")
             return
         status, obj = apply_payload(self._read_json())
@@ -254,6 +270,64 @@ def _thumbnail(sc) -> dict:
     if result.data_uri is None:
         return {"icon_origin": result.origin}
     return {"thumbnail": result.data_uri, "icon_origin": result.origin}
+
+
+def _find(identity: str, shortcut_id: str):
+    return next((sc for sc in resolve(identity) if sc.id == shortcut_id), None)
+
+
+def variants_payload(identity: str, shortcut_id: str) -> dict:
+    """Every candidate drawn for one action, and which of them the key is using."""
+    sc = _find(identity, shortcut_id)
+    if sc is None:
+        return {"id": shortcut_id, "variants": [], "error": "unknown shortcut"}
+    chosen = icons.chosen_path(sc)
+    chosen_bytes = chosen.read_bytes() if chosen.is_file() else None
+    out = []
+    for index in icons.variants(sc):
+        try:
+            png = icons.variant_path(sc, index).read_bytes()
+        except OSError:
+            continue
+        out.append({
+            "n": index,
+            "data_uri": icons.to_data_uri(png),
+            "chosen": png == chosen_bytes,
+        })
+    return {
+        "id": shortcut_id,
+        "label": sc.label,
+        "variants": out,
+        # An action whose icon predates variants has art but nothing to choose between; say so
+        # rather than showing an empty tray that looks broken.
+        "current": icons.to_data_uri(chosen_bytes) if chosen_bytes else None,
+    }
+
+
+def draw_payload(payload: dict) -> tuple[int, dict]:
+    """Draw one more candidate. This spends money, so it is a POST and never implicit."""
+    identity = payload.get("identity", "")
+    sc = _find(identity, payload.get("id", ""))
+    if sc is None:
+        return 400, {"ok": False, "error": "unknown shortcut"}
+    index = icons.draw_another(sc)
+    if index is None:
+        return 502, {"ok": False, "error": "the generator gave us nothing; see the log"}
+    return 200, {"ok": True, **variants_payload(identity, sc.id)}
+
+
+def choose_payload(payload: dict) -> tuple[int, dict]:
+    identity = payload.get("identity", "")
+    sc = _find(identity, payload.get("id", ""))
+    if sc is None:
+        return 400, {"ok": False, "error": "unknown shortcut"}
+    try:
+        index = int(payload.get("n"))
+    except (TypeError, ValueError):
+        return 400, {"ok": False, "error": "n must be a variant number"}
+    if not icons.choose(sc, index):
+        return 404, {"ok": False, "error": f"no variant {index} for {sc.id}"}
+    return 200, {"ok": True, **variants_payload(identity, sc.id)}
 
 
 def profile_payload(identity: str, device: str) -> dict:

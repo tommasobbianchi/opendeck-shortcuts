@@ -71,6 +71,85 @@ class TestThumbnails(ServerTestCase):
         self.assertEqual(rows[0]["icon_origin"], "none")
 
 
+class TestVariants(ServerTestCase):
+    """Several candidates per action, one of them on the key."""
+
+    def setUp(self):
+        super().setUp()
+        from shortcuts import icons
+        from shortcuts.providers import resolve as resolve_shortcuts
+        self.icons = icons
+        self.sc = next(s for s in resolve_shortcuts("claude") if s.id == "claude.submit")
+        icons.cache_dir().mkdir(parents=True, exist_ok=True)
+
+    def _png(self, tag):
+        return b"\x89PNG\r\n\x1a\n" + tag
+
+    def _seed(self, index, tag):
+        self.icons.variant_path(self.sc, index).write_bytes(self._png(tag))
+
+    def _post(self, path, body):
+        with _request(self.base + path, method="POST", body=body) as resp:
+            return resp.status, json.loads(resp.read().decode("utf-8"))
+
+    def test_candidates_are_listed_with_the_one_in_use_marked(self):
+        self._seed(1, b"one")
+        self._seed(2, b"two")
+        self.icons.chosen_path(self.sc).write_bytes(self._png(b"two"))
+        status, body = self._get_json(
+            "/api/variants?identity=claude&id=claude.submit")
+        self.assertEqual(status, 200)
+        self.assertEqual([v["n"] for v in body["variants"]], [1, 2])
+        self.assertEqual([v["chosen"] for v in body["variants"]], [False, True])
+
+    def test_choosing_a_candidate_puts_it_on_the_key(self):
+        self._seed(1, b"one")
+        self._seed(2, b"two")
+        self.icons.chosen_path(self.sc).write_bytes(self._png(b"two"))
+        status, body = self._post("/api/choose", {"identity": "claude", "id": "claude.submit", "n": 1})
+        self.assertEqual(status, 200)
+        self.assertEqual(self.icons.chosen_path(self.sc).read_bytes(), self._png(b"one"))
+        self.assertTrue(body["variants"][0]["chosen"])
+
+    def test_choosing_something_that_was_never_drawn_is_a_404(self):
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            _request(self.base + "/api/choose", method="POST",
+                     body={"identity": "claude", "id": "claude.submit", "n": 9})
+        self.assertEqual(ctx.exception.code, 404)
+
+    def test_drawing_another_never_overwrites_the_one_in_use(self):
+        self._seed(1, b"one")
+        self.icons.chosen_path(self.sc).write_bytes(self._png(b"one"))
+        with mock.patch.object(server_mod.icons, "generate",
+                               side_effect=lambda sc, timeout=300, slot=None:
+                               self._seed(slot, b"new") or self._png(b"new")):
+            status, body = self._post("/api/variants", {"identity": "claude", "id": "claude.submit"})
+        self.assertEqual(status, 200)
+        self.assertEqual([v["n"] for v in body["variants"]], [1, 2])
+        self.assertEqual(self.icons.chosen_path(self.sc).read_bytes(), self._png(b"one"),
+                         "the key keeps the icon it had until someone picks the new one")
+
+    def test_the_first_draw_for_a_bare_action_also_becomes_the_icon(self):
+        with mock.patch.object(server_mod.icons, "generate",
+                               side_effect=lambda sc, timeout=300, slot=None:
+                               self._seed(slot, b"first") or self._png(b"first")):
+            self._post("/api/variants", {"identity": "claude", "id": "claude.submit"})
+        self.assertEqual(self.icons.chosen_path(self.sc).read_bytes(), self._png(b"first"))
+
+    def test_a_generator_that_fails_is_reported_not_swallowed(self):
+        with mock.patch.object(server_mod.icons, "generate", return_value=None):
+            with self.assertRaises(urllib.error.HTTPError) as ctx:
+                _request(self.base + "/api/variants", method="POST",
+                         body={"identity": "claude", "id": "claude.submit"})
+        self.assertEqual(ctx.exception.code, 502)
+
+    def test_an_unknown_shortcut_is_refused(self):
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            _request(self.base + "/api/choose", method="POST",
+                     body={"identity": "claude", "id": "nope", "n": 1})
+        self.assertEqual(ctx.exception.code, 400)
+
+
 class TestIdentities(ServerTestCase):
     def _publish(self, seen):
         path = Path(self.tmp) / "seen.json"

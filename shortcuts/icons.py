@@ -137,8 +137,44 @@ def _download(url: str, timeout: int) -> bytes | None:
         return None
 
 
-def _cache_write(shortcut, png: bytes) -> None:
-    path = cache_dir() / f"{cache_key(shortcut)}.png"
+def chosen_path(shortcut) -> Path:
+    """The icon this action actually uses. Everything else reads only this file."""
+    return cache_dir() / f"{cache_key(shortcut)}.png"
+
+
+def variant_path(shortcut, index: int) -> Path:
+    """A candidate the model drew, waiting to be picked. Never read by the deck."""
+    return cache_dir() / f"{cache_key(shortcut)}.v{index}.png"
+
+
+def variants(shortcut) -> list[int]:
+    """Indices of the candidates on disk for this action, in order."""
+    prefix = f"{cache_key(shortcut)}.v"
+    found = []
+    for path in cache_dir().glob(f"{prefix}*.png"):
+        try:
+            found.append(int(path.name[len(prefix):-4]))
+        except ValueError:
+            continue
+    return sorted(found)
+
+
+def choose(shortcut, index: int) -> bool:
+    """Promote candidate ``index`` to the icon this action uses."""
+    source = variant_path(shortcut, index)
+    if not source.is_file():
+        log.error("no variant %d for %s", index, shortcut.id)
+        return False
+    try:
+        chosen_path(shortcut).write_bytes(source.read_bytes())
+    except OSError:
+        log.exception("could not choose variant %d for %s", index, shortcut.id)
+        return False
+    return True
+
+
+def _cache_write(shortcut, png: bytes, slot: int | None = None) -> None:
+    path = chosen_path(shortcut) if slot is None else variant_path(shortcut, slot)
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(png)
@@ -146,8 +182,12 @@ def _cache_write(shortcut, png: bytes) -> None:
         log.exception("could not write icon cache %s", path)
 
 
-def generate(shortcut, timeout: int = 300) -> bytes | None:
-    """Generate a 96x96 PNG via the local ``infsh`` binary, cached, or None."""
+def generate(shortcut, timeout: int = 300, slot: int | None = None) -> bytes | None:
+    """Generate a 96x96 PNG via the local ``infsh`` binary, cached, or None.
+
+    With ``slot``, the drawing is filed as that candidate rather than as the icon in use, so
+    asking for another one cannot overwrite the one you already liked.
+    """
     if not _INFSH.is_file():
         log.error("inferencesh binary not found at %s", _INFSH)
         return None
@@ -178,11 +218,28 @@ def generate(shortcut, timeout: int = 300) -> bytes | None:
             png = rasterise(img_path)
             if png is None:
                 return None
-            _cache_write(shortcut, png)
+            _cache_write(shortcut, png, slot=slot)
             return png
     except Exception:
         log.exception("generation failed for %s", shortcut.id)
         return None
+
+
+def draw_another(shortcut, timeout: int = 300) -> int | None:
+    """Draw one more candidate for this action and return its index.
+
+    The first candidate for an action that has no icon yet also becomes the icon in use --
+    otherwise the first draw would leave the key blank until someone picked something, which
+    is a worse default than "what the model came up with".
+    """
+    existing = variants(shortcut)
+    index = (existing[-1] + 1) if existing else 1
+    png = generate(shortcut, timeout=timeout, slot=index)
+    if png is None:
+        return None
+    if not chosen_path(shortcut).is_file():
+        _cache_write(shortcut, png)
+    return index
 
 
 def resolve(shortcut, generate_missing: bool = False, publish: bool = False) -> IconResult:

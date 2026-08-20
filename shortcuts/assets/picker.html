@@ -50,6 +50,33 @@
   }
   #guess.show { display: block; }
   #guess:disabled { opacity: .6; cursor: default; }
+  .thumb.blank {
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px dashed var(--border); border-radius: 4px; color: var(--muted);
+    font-size: 16px; cursor: pointer;
+  }
+  .thumb { cursor: pointer; }
+  #iconpicker {
+    position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none;
+    align-items: center; justify-content: center; z-index: 10;
+  }
+  #iconpicker.show { display: flex; }
+  #iconpicker .panel {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; width: min(560px, 92vw); max-height: 86vh; overflow: auto;
+  }
+  #iconpicker h2 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+  #iconpicker .hint { margin: 0 0 12px; font-size: 12px; color: var(--muted); }
+  #tray { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  #tray figure { margin: 0; text-align: center; }
+  #tray img {
+    width: 72px; height: 72px; border-radius: 6px; border: 2px solid transparent;
+    background: #000; cursor: pointer; display: block;
+  }
+  #tray img:hover { border-color: var(--accent); }
+  #tray .is-chosen img { border-color: var(--ok); }
+  #tray figcaption { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  #iconpicker .actions { display: flex; gap: 8px; }
   #result.err { color: var(--danger); }
 
   main { display: flex; gap: 18px; padding: 18px; align-items: flex-start; }
@@ -118,6 +145,18 @@
   <span id="result"></span>
   <div id="identitywarning"></div>
 </header>
+
+<div id="iconpicker">
+  <div class="panel">
+    <h2 id="ip-title"></h2>
+    <p class="hint">Click a candidate to put it on the key. Drawing another costs one generation.</p>
+    <div id="tray"></div>
+    <div class="actions">
+      <button id="ip-draw">Draw another</button>
+      <button id="ip-close">Close</button>
+    </div>
+  </div>
+</div>
 
 <main>
   <section id="left">
@@ -245,9 +284,18 @@
         const img = document.createElement("img");
         img.className = "thumb";
         img.src = iconSrc(art);
-        img.title = `icon: ${sc.icon ? "shipped by the app" : sc.icon_origin}`;
+        img.title = `icon: ${sc.icon ? "shipped by the app" : sc.icon_origin} \u2014 click to change`;
         img.onerror = () => img.remove();
+        img.addEventListener("click", (e) => { e.stopPropagation(); openTray(sc); });
         li.appendChild(img);
+      } else {
+        // No art anywhere: the placeholder is how an action gets its first one.
+        const blank = document.createElement("div");
+        blank.className = "thumb blank";
+        blank.textContent = "+";
+        blank.title = "no icon yet - click to draw one";
+        blank.addEventListener("click", (e) => { e.stopPropagation(); openTray(sc); });
+        li.appendChild(blank);
       }
 
       const combo = document.createElement("span");
@@ -364,6 +412,84 @@
     }
   }
 
+  // -- icon tray ------------------------------------------------------------
+  // One action, several candidates the model drew. The deck reads only the chosen one, so
+  // picking here is a copy, and drawing another can never overwrite one you liked.
+  let trayFor = null;
+
+  async function openTray(sc) {
+    trayFor = sc.id;
+    $("ip-title").textContent = `${sc.label} \u2014 ${sc.combo}`;
+    $("iconpicker").classList.add("show");
+    await renderTray(await fetchJSON(
+      "/api/variants?identity=" + encodeURIComponent(state.identity) +
+      "&id=" + encodeURIComponent(sc.id)));
+  }
+
+  async function renderTray(data) {
+    const tray = $("tray");
+    tray.innerHTML = "";
+    if (data.current && !(data.variants || []).length) {
+      // Art from before candidates existed: there is one image and nothing to choose between.
+      tray.appendChild(trayFigure(data.current, "in use", true, null));
+    }
+    for (const v of data.variants || []) {
+      tray.appendChild(trayFigure(v.data_uri, `#${v.n}${v.chosen ? " \u2713" : ""}`, v.chosen, v.n));
+    }
+    if (!tray.children.length) {
+      const empty = document.createElement("p");
+      empty.className = "hint";
+      empty.textContent = "Nothing drawn for this action yet.";
+      tray.appendChild(empty);
+    }
+  }
+
+  function trayFigure(src, caption, chosen, n) {
+    const fig = document.createElement("figure");
+    if (chosen) fig.className = "is-chosen";
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = caption;
+    if (n !== null) img.addEventListener("click", () => chooseVariant(n));
+    fig.appendChild(img);
+    const cap = document.createElement("figcaption");
+    cap.textContent = caption;
+    fig.appendChild(cap);
+    return fig;
+  }
+
+  async function chooseVariant(n) {
+    const data = await fetchJSON("/api/choose", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identity: state.identity, id: trayFor, n }),
+    });
+    await renderTray(data);
+    await loadShortcuts();
+  }
+
+  async function drawAnother() {
+    const button = $("ip-draw");
+    button.disabled = true;
+    button.textContent = "Drawing...";
+    try {
+      const data = await fetchJSON("/api/variants", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identity: state.identity, id: trayFor }),
+      });
+      if (data.ok === false) {
+        $("tray").insertAdjacentHTML("beforeend", `<p class="hint">${esc(data.error)}</p>`);
+      } else {
+        await renderTray(data);
+        await loadShortcuts();
+      }
+    } finally {
+      button.disabled = false;
+      button.textContent = "Draw another";
+    }
+  }
+
   async function loadDevices() {
     const devs = await fetchJSON("/api/devices");
     const sel = $("device");
@@ -436,6 +562,11 @@
   });
   $("apply").addEventListener("click", apply);
   $("guess").addEventListener("click", guessShortcuts);
+  $("ip-draw").addEventListener("click", drawAnother);
+  $("ip-close").addEventListener("click", () => $("iconpicker").classList.remove("show"));
+  $("iconpicker").addEventListener("click", (e) => {
+    if (e.target.id === "iconpicker") $("iconpicker").classList.remove("show");
+  });
 
   window.addEventListener("DOMContentLoaded", async () => {
     await loadIdentity();

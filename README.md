@@ -107,6 +107,22 @@ Each key needs a 96x96 image. Three sources, in order, never guessing:
 4. **Generated** — only when explicitly asked for, via the local `infsh` binary.
    It costs money and needs the network, so it is never implicit.
 
+### Choosing between candidates
+
+One glyph per action is a lottery ticket, so the picker can hold several. Clicking a row's
+thumbnail — or the `+` on a row that has none — opens a tray:
+
+* **Draw another** files a new candidate as `<key>.v<n>.png` and **never touches the icon the
+  key is using**, so asking for one more cannot lose the one you liked.
+* **Clicking a candidate** copies it onto `<key>.png`, which is the only file the deck, the
+  store and the profile writer ever read. That is the whole mechanism: everything else in the
+  codebase stayed as it was.
+* The first draw for an action with no icon at all also becomes the icon, because a blank key
+  is a worse default than whatever the model came up with.
+
+Candidates cost a generation each and live only in the local cache; only the chosen one is
+publishable, and `--publish-cached` shares it once you have decided.
+
 `python3 -m shortcuts icons <identity>` reports the origin of every key's icon
 (`app`, `cache`, `generated`, or `none`). Without `--generate` it makes no
 network calls at all; the generated prompt asks for a flat minimalist glyph with
