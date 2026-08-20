@@ -40,6 +40,8 @@ def _icons_main(argv: list[str]) -> int:
     parser.add_argument("--publish", action="store_true",
                         help=f"share what was generated to {store.DEFAULT_REPO} (publishes app and action names)")
     parser.add_argument("--limit", type=int, default=None, help="only resolve the first N shortcuts")
+    parser.add_argument("--publish-cached", action="store_true",
+                        help="share the icons this machine already has, without generating anything")
     parser.add_argument("--store-list", action="store_true", help="list what the shared store holds, and exit")
     args = parser.parse_args(argv)
 
@@ -51,6 +53,9 @@ def _icons_main(argv: list[str]) -> int:
         parser.error("identity is required")
     if args.publish and not args.generate:
         parser.error("--publish has nothing to share without --generate")
+
+    if args.publish_cached:
+        return _publish_cached(args.identity, args.limit)
 
     shortcuts = resolve(args.identity)
     results = icons.resolve_many(
@@ -87,6 +92,37 @@ def _guess_main(argv: list[str]) -> int:
         print(f"{s.combo}\t{s.provenance}\t{s.label}")
     print(f"cached in {path}", file=sys.stderr)
     return 0
+
+
+def _publish_cached(identity: str, limit: int | None) -> int:
+    """Share the icons already sitting in this machine's cache.
+
+    The usual `--generate --publish` pairing cannot do this: it would pay to draw a glyph that
+    already exists. An application's own art is skipped rather than uploaded -- it is not ours
+    to redistribute, and it never reaches the cache in the first place.
+    """
+    from . import icons, store
+
+    shortcuts = resolve(identity)
+    if limit is not None:
+        shortcuts = shortcuts[:limit]
+    shared = skipped = failed = 0
+    for sc in shortcuts:
+        if sc.icon:
+            skipped += 1
+            continue
+        result = icons.resolve(sc)
+        if result.origin != "cache":
+            skipped += 1
+            continue
+        png = (icons.cache_dir() / f"{icons.cache_key(sc)}.png").read_bytes()
+        if store.publish(sc, png, "cache", message=f"Add {store.path_for(sc)}"):
+            print(f"{sc.id}\t{store.path_for(sc)}")
+            shared += 1
+        else:
+            failed += 1
+    print(f"shared {shared}, skipped {skipped}, failed {failed}", file=sys.stderr)
+    return 1 if failed else 0
 
 
 def _catalogue_main(argv: list[str]) -> int:

@@ -93,12 +93,19 @@ def fetch(shortcut, timeout: int = 10) -> bytes | None:
     return data
 
 
-def publish(shortcut, png: bytes, origin: str, message: str | None = None) -> bool:
-    """Upload one generated icon. Returns whether the store now holds it.
+#: Origins whose art is ours to share. ``cache`` is on the list because nothing else can get
+#: there: :func:`shortcuts.icons.resolve` returns an application's own art directly and never
+#: writes it to the cache, so a cached PNG came either from the generator or from this store.
+#: ``app`` is what the rule exists to keep out.
+PUBLISHABLE = frozenset({"generated", "cache"})
 
-    Refuses art that did not come from the generator, and needs an authenticated ``gh``.
+
+def publish(shortcut, png: bytes, origin: str, message: str | None = None) -> bool:
+    """Upload one icon we are entitled to share. Returns whether the store now holds it.
+
+    Refuses an application's own art, and needs an authenticated ``gh``.
     """
-    if origin != "generated":
+    if origin not in PUBLISHABLE:
         log.error("refusing to publish %s art for %s; only generated icons are ours to share",
                   origin, shortcut.id)
         return False

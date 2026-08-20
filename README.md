@@ -135,8 +135,14 @@ Two boundaries hold it up:
 
 ```sh
 python3 -m shortcuts icons orca --generate --publish   # share what this run generated
+python3 -m shortcuts icons kitty --publish-cached      # share what this machine already has
 python3 -m shortcuts icons --store-list                # what the store holds
 ```
+
+`--publish-cached` exists because `--generate --publish` cannot share an icon that already
+exists without paying to draw it again. It is safe for the same reason the store is: an
+application's own art is returned straight from `Shortcut.icon` and never written to the cache,
+so a cached PNG came from the generator or from the store, and either way is ours to share.
 
 `OPENDECK_ICON_STORE=0` turns it off for an offline or a private machine;
 `OPENDECK_ICON_REPO=owner/name` points at a different store. Hostile names cannot escape the

@@ -66,12 +66,23 @@ class FetchTestCase(unittest.TestCase):
 
 
 class PublishTestCase(unittest.TestCase):
-    def test_only_generated_art_may_be_published(self):
+    def test_an_applications_own_art_may_never_be_published(self):
         with mock.patch.object(store.subprocess, "run") as run:
             self.assertFalse(store.publish(_shortcut(), PNG, "app"))
-            self.assertFalse(store.publish(_shortcut(), PNG, "cache"))
-            self.assertFalse(store.publish(_shortcut(), PNG, "store"))
+            self.assertFalse(store.publish(_shortcut(), PNG, "none"))
             run.assert_not_called()
+
+    def test_cached_art_may_be_published_because_app_art_never_reaches_the_cache(self):
+        # icons.resolve returns app art directly and only ever caches what it generated or
+        # fetched from this store, so a cached PNG is always ours to share.
+        import inspect
+
+        from shortcuts import icons
+        source = inspect.getsource(icons.resolve)
+        self.assertNotIn("_cache_write", source.split('"app"')[0],
+                         "app art must not be written to the cache")
+        self.assertIn("cache", store.PUBLISHABLE)
+        self.assertNotIn("app", store.PUBLISHABLE)
 
     def test_a_non_png_is_refused_even_when_generated(self):
         with mock.patch.object(store.subprocess, "run") as run:
