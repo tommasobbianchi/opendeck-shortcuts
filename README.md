@@ -18,14 +18,18 @@ shortcuts/
     __init__.py         Provider protocol + resolve()
     kitty.py            extracts `map` lines from the kitty config
     curated.py          loads catalogue/*.json
+    orca.py             extracts shortcuts + icons from an OrcaSlicer tree
   cli.py                command line interface
 catalogue/
   chrome.json           curated Chrome bindings
   claude.json           curated Claude Code bindings
+  orca.snapshot.json    OrcaSlicer fallback, for machines with no source tree
 tests/
   test_keys.py          encoder tests
   test_providers.py     provider + resolve tests
+  test_orca.py          OrcaSlicer provider tests
   fixtures/kitty.conf   the user's real kitty config
+  fixtures/KBShortcutsDialog_excerpt.cpp
 ```
 
 ## Usage
@@ -63,6 +67,15 @@ the OpenDeck side with `ron::from_str::<Vec<Token>>`.
   with a documentation `source`. Entries are only added when the binding is
   known to be real: an invented shortcut silently does nothing, which is worse
   than no key at all. This is why `claude.json` is deliberately minimal.
+* **orca** (`extracted`) — parses `src/slic3r/GUI/KBShortcutsDialog.cpp` from
+  an OrcaSlicer source tree (`$ORCA_SOURCE`, then a list of known checkouts),
+  falling back to `catalogue/orca.snapshot.json` when no tree is present.
+  Non-deterministic key expressions (mouse actions, `Any arrow`, the `1-9`
+  range, bare `shift`, anything non-ASCII) are dropped, never guessed; the
+  Apple side of `#ifdef __APPLE__` branches is discarded. Each shortcut is
+  matched to a `resources/images/*.svg` only on an exact stem match, so most
+  entries carry no icon. `python3 -m shortcuts.providers.orca --snapshot <tree>`
+  regenerates the committed snapshot.
 
 `resolve(identity)` concatenates every matching provider per segment and
 de-duplicates by `(app, combo)`, keeping the strongest provenance

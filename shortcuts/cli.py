@@ -34,6 +34,8 @@ def main(argv: list[str] | None = None) -> int:
                 "combo": s.combo,
                 "provenance": s.provenance,
                 "source": s.source,
+                "category": s.category,
+                "icon": s.icon,
                 "tokens": s.tokens,
             }
             for s in shortcuts
@@ -41,7 +43,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(records, indent=2))
     else:
         for s in shortcuts:
-            print(f"{s.combo}\t{s.provenance}\t{s.label}")
+            print(f"{s.combo}\t{s.category}\t{s.provenance}\t{s.label}")
     return 0
 
 

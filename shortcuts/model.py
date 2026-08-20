@@ -12,6 +12,8 @@ class Shortcut:
     combo: str
     provenance: Provenance
     source: str
+    category: str = ""
+    icon: str | None = None
 
     @property
     def tokens(self) -> str:

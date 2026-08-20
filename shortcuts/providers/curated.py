@@ -9,7 +9,20 @@ _CATALOGUE_DIR = Path(__file__).resolve().parents[2] / "catalogue"
 
 
 def _files() -> list[Path]:
-    return sorted(_CATALOGUE_DIR.glob("*.json"))
+    out: list[Path] = []
+    for f in sorted(_CATALOGUE_DIR.glob("*.json")):
+        # Provider snapshots share this directory but are not curated files: they carry
+        # already-extracted records in their own shape. Name them, rather than sniffing for a
+        # key, so a curated file that forgets one is a loud failure and not a silent absence.
+        if f.name.endswith(".snapshot.json"):
+            continue
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(data, dict) and "app" in data and "shortcuts" in data:
+            out.append(f)
+    return out
 
 
 def _app_of(path: Path) -> str:

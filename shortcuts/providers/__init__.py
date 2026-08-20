@@ -2,7 +2,7 @@ import logging
 from typing import Protocol
 
 from ..model import Shortcut
-from . import curated, kitty
+from . import curated, kitty, orca
 
 log = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ class Provider(Protocol):
     def shortcuts(self, segment: str) -> list[Shortcut]: ...
 
 
-PROVIDERS: list = [kitty, curated]
+PROVIDERS: list = [kitty, curated, orca]
 
 _PROVENANCE_RANK = {"extracted": 3, "curated": 2, "guessed": 1}
 

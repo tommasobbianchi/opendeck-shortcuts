@@ -1,0 +1,501 @@
+{
+  "shortcuts": [
+    {
+      "id": "orca.new_project",
+      "label": "New Project",
+      "combo": "ctrl+n",
+      "category": "Global",
+      "icon": null
+    },
+    {
+      "id": "orca.open_project",
+      "label": "Open Project",
+      "combo": "ctrl+o",
+      "category": "Global",
+      "icon": "resources/images/open_project.svg"
+    },
+    {
+      "id": "orca.save_project",
+      "label": "Save Project",
+      "combo": "ctrl+s",
+      "category": "Global",
+      "icon": "resources/images/save.svg"
+    },
+    {
+      "id": "orca.save_project_as",
+      "label": "Save Project as",
+      "combo": "ctrl+shift+s",
+      "category": "Global",
+      "icon": "resources/images/save.svg"
+    },
+    {
+      "id": "orca.import_geometry_data_from_stl_step_3mf_obj_amf_files",
+      "label": "Import geometry data from STL/STEP/3MF/OBJ/AMF files",
+      "combo": "ctrl+i",
+      "category": "Global",
+      "icon": null
+    },
+    {
+      "id": "orca.export_plate_sliced_file",
+      "label": "Export plate sliced file",
+      "combo": "ctrl+g",
+      "category": "Global",
+      "icon": null
+    },
+    {
+      "id": "orca.slice_plate",
+      "label": "Slice plate",
+      "combo": "ctrl+r",
+      "category": "Global",
+      "icon": null
+    },
+    {
+      "id": "orca.print_plate",
+      "label": "Print plate",
+      "combo": "ctrl+shift+g",
+      "category": "Global",
+      "icon": null
+    },
+    {
+      "id": "orca.cut",
+      "label": "Cut",
+      "combo": "ctrl+x",
+      "category": "Global",
+      "icon": null
+    },
+    {
+      "id": "orca.copy_to_clipboard",
+      "label": "Copy to clipboard",
+      "combo": "ctrl+c",
+      "category": "Global",
+      "icon": null
+    },
+    {
+      "id": "orca.paste_from_clipboard",
+      "label": "Paste from clipboard",
+      "combo": "ctrl+v",
+      "category": "Global",
+      "icon": null
+    },
+    {
+      "id": "orca.preferences",
+      "label": "Preferences",
+      "combo": "ctrl+p",
+      "category": "Global",
+      "icon": null
+    },
+    {
+      "id": "orca.show_hide_3dconnexion_devices_settings_dialog",
+      "label": "Show/Hide 3Dconnexion devices settings dialog",
+      "combo": "ctrl+m",
+      "category": "Global",
+      "icon": "resources/images/settings.svg"
+    },
+    {
+      "id": "orca.switch_table_page",
+      "label": "Switch table page",
+      "combo": "ctrl+tab",
+      "category": "Global",
+      "icon": "resources/images/table.svg"
+    },
+    {
+      "id": "orca.delete_selected",
+      "label": "Delete selected",
+      "combo": "delete",
+      "category": "Global",
+      "icon": "resources/images/delete.svg"
+    },
+    {
+      "id": "orca.show_keyboard_shortcuts_list",
+      "label": "Show keyboard shortcuts list",
+      "combo": "?",
+      "category": "Global",
+      "icon": null
+    },
+    {
+      "id": "orca.arrange_all_objects",
+      "label": "Arrange all objects",
+      "combo": "a",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.arrange_objects_on_selected_plates",
+      "label": "Arrange objects on selected plates",
+      "combo": "shift+a",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.auto_orients_selected_objects_or_all_objects_if_there_are_selected_objects_it_just_orients_the_selected_ones_otherwise_it_will_orient_all_objects_in_the_current_project",
+      "label": "Auto orients selected objects or all objects. If there are selected objects, it just orients the selected ones. Otherwise, it will orient all objects in the current project.",
+      "combo": "q",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.auto_orients_all_objects_on_the_active_plate",
+      "label": "Auto orients all objects on the active plate.",
+      "combo": "shift+q",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.collapse_expand_the_sidebar",
+      "label": "Collapse/Expand the sidebar",
+      "combo": "shift+tab",
+      "category": "Plater",
+      "icon": "resources/images/collapse.svg"
+    },
+    {
+      "id": "orca.move_selection_10_mm_in_positive_y_direction",
+      "label": "Move selection 10 mm in positive Y direction",
+      "combo": "up",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.move_selection_10_mm_in_negative_y_direction",
+      "label": "Move selection 10 mm in negative Y direction",
+      "combo": "down",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.move_selection_10_mm_in_negative_x_direction",
+      "label": "Move selection 10 mm in negative X direction",
+      "combo": "left",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.move_selection_10_mm_in_positive_x_direction",
+      "label": "Move selection 10 mm in positive X direction",
+      "combo": "right",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.deselect_all",
+      "label": "Deselect all",
+      "combo": "escape",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.camera_view_default",
+      "label": "Camera view - Default",
+      "combo": "ctrl+0",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.camera_view_top",
+      "label": "Camera view - Top",
+      "combo": "ctrl+1",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.camera_view_bottom",
+      "label": "Camera view - Bottom",
+      "combo": "ctrl+2",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.camera_view_front",
+      "label": "Camera view - Front",
+      "combo": "ctrl+3",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.camera_view_behind",
+      "label": "Camera view - Behind",
+      "combo": "ctrl+4",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.camera_angle_left_side",
+      "label": "Camera Angle - Left side",
+      "combo": "ctrl+5",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.camera_angle_right_side",
+      "label": "Camera Angle - Right side",
+      "combo": "ctrl+6",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.select_all_objects",
+      "label": "Select all objects",
+      "combo": "ctrl+a",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.delete_all",
+      "label": "Delete all",
+      "combo": "ctrl+d",
+      "category": "Plater",
+      "icon": "resources/images/delete.svg"
+    },
+    {
+      "id": "orca.undo",
+      "label": "Undo",
+      "combo": "ctrl+z",
+      "category": "Plater",
+      "icon": "resources/images/undo.svg"
+    },
+    {
+      "id": "orca.redo",
+      "label": "Redo",
+      "combo": "ctrl+y",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_move",
+      "label": "Gizmo move",
+      "combo": "m",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_rotate",
+      "label": "Gizmo rotate",
+      "combo": "r",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_scale",
+      "label": "Gizmo scale",
+      "combo": "s",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_place_face_on_bed",
+      "label": "Gizmo place face on bed",
+      "combo": "f",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_cut",
+      "label": "Gizmo cut",
+      "combo": "c",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_mesh_boolean",
+      "label": "Gizmo mesh boolean",
+      "combo": "b",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_fdm_paint_on_fuzzy_skin",
+      "label": "Gizmo FDM paint-on fuzzy skin",
+      "combo": "h",
+      "category": "Plater",
+      "icon": "resources/images/fuzzy_skin.svg"
+    },
+    {
+      "id": "orca.gizmo_sla_support_points",
+      "label": "Gizmo SLA support points",
+      "combo": "l",
+      "category": "Plater",
+      "icon": "resources/images/support.svg"
+    },
+    {
+      "id": "orca.gizmo_fdm_paint_on_seam",
+      "label": "Gizmo FDM paint-on seam",
+      "combo": "p",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_text_emboss_engrave",
+      "label": "Gizmo text emboss/engrave",
+      "combo": "t",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_measure",
+      "label": "Gizmo measure",
+      "combo": "u",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_assemble",
+      "label": "Gizmo assemble",
+      "combo": "y",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.gizmo_brim_ears",
+      "label": "Gizmo brim ears",
+      "combo": "e",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.zoom_in",
+      "label": "Zoom in",
+      "combo": "i",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.zoom_out",
+      "label": "Zoom out",
+      "combo": "o",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.toggle_printable_for_object_part",
+      "label": "Toggle printable for object/part",
+      "combo": "v",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.switch_between_prepare_preview",
+      "label": "Switch between Prepare/Preview",
+      "combo": "tab",
+      "category": "Plater",
+      "icon": null
+    },
+    {
+      "id": "orca.deselect_all",
+      "label": "Deselect all",
+      "combo": "escape",
+      "category": "Gizmos",
+      "icon": null
+    },
+    {
+      "id": "orca.delete_objects_parts_modifiers",
+      "label": "Delete objects, parts, modifiers",
+      "combo": "delete",
+      "category": "Object list",
+      "icon": "resources/images/delete.svg"
+    },
+    {
+      "id": "orca.deselect_all",
+      "label": "Deselect all",
+      "combo": "escape",
+      "category": "Object list",
+      "icon": null
+    },
+    {
+      "id": "orca.copy_to_clipboard",
+      "label": "Copy to clipboard",
+      "combo": "ctrl+c",
+      "category": "Object list",
+      "icon": null
+    },
+    {
+      "id": "orca.paste_from_clipboard",
+      "label": "Paste from clipboard",
+      "combo": "ctrl+v",
+      "category": "Object list",
+      "icon": null
+    },
+    {
+      "id": "orca.cut",
+      "label": "Cut",
+      "combo": "ctrl+x",
+      "category": "Object list",
+      "icon": null
+    },
+    {
+      "id": "orca.select_all_objects",
+      "label": "Select all objects",
+      "combo": "ctrl+a",
+      "category": "Object list",
+      "icon": null
+    },
+    {
+      "id": "orca.clone_selected",
+      "label": "Clone selected",
+      "combo": "ctrl+k",
+      "category": "Object list",
+      "icon": null
+    },
+    {
+      "id": "orca.undo",
+      "label": "Undo",
+      "combo": "ctrl+z",
+      "category": "Object list",
+      "icon": "resources/images/undo.svg"
+    },
+    {
+      "id": "orca.redo",
+      "label": "Redo",
+      "combo": "ctrl+y",
+      "category": "Object list",
+      "icon": null
+    },
+    {
+      "id": "orca.vertical_slider_move_active_thumb_up",
+      "label": "Vertical slider - Move active thumb Up",
+      "combo": "up",
+      "category": "Preview",
+      "icon": null
+    },
+    {
+      "id": "orca.vertical_slider_move_active_thumb_down",
+      "label": "Vertical slider - Move active thumb Down",
+      "combo": "down",
+      "category": "Preview",
+      "icon": null
+    },
+    {
+      "id": "orca.horizontal_slider_move_active_thumb_left",
+      "label": "Horizontal slider - Move active thumb Left",
+      "combo": "left",
+      "category": "Preview",
+      "icon": null
+    },
+    {
+      "id": "orca.horizontal_slider_move_active_thumb_right",
+      "label": "Horizontal slider - Move active thumb Right",
+      "combo": "right",
+      "category": "Preview",
+      "icon": null
+    },
+    {
+      "id": "orca.on_off_one_layer_mode_of_the_vertical_slider",
+      "label": "On/Off one layer mode of the vertical slider",
+      "combo": "l",
+      "category": "Preview",
+      "icon": null
+    },
+    {
+      "id": "orca.on_off_g_code_window",
+      "label": "On/Off G-code window",
+      "combo": "c",
+      "category": "Preview",
+      "icon": null
+    },
+    {
+      "id": "orca.switch_between_prepare_preview",
+      "label": "Switch between Prepare/Preview",
+      "combo": "tab",
+      "category": "Preview",
+      "icon": null
+    }
+  ]
+}
