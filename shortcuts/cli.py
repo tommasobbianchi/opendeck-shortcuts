@@ -42,6 +42,8 @@ def _icons_main(argv: list[str]) -> int:
     parser.add_argument("--limit", type=int, default=None, help="only resolve the first N shortcuts")
     parser.add_argument("--publish-cached", action="store_true",
                         help="share the icons this machine already has, without generating anything")
+    parser.add_argument("--push", action="store_true",
+                        help="send the chosen icons to a RUNNING OpenDeck, without rewriting its files")
     parser.add_argument("--store-list", action="store_true", help="list what the shared store holds, and exit")
     args = parser.parse_args(argv)
 
@@ -56,6 +58,9 @@ def _icons_main(argv: list[str]) -> int:
 
     if args.publish_cached:
         return _publish_cached(args.identity, args.limit)
+
+    if args.push:
+        return _push_live(args.identity)
 
     shortcuts = resolve(args.identity)
     results = icons.resolve_many(
@@ -92,6 +97,50 @@ def _guess_main(argv: list[str]) -> int:
         print(f"{s.combo}\t{s.provenance}\t{s.label}")
     print(f"cached in {path}", file=sys.stderr)
     return 0
+
+
+def _push_live(identity: str) -> int:
+    """Refresh a running OpenDeck's keys with the icons currently chosen.
+
+    Apply rewrites profile files, which OpenDeck holds in memory and overwrites on exit, so it
+    needs the app stopped. Changing your mind about an icon afterwards should not cost a
+    restart: this pushes the chosen art straight into the running instance instead.
+
+    Keys are matched by the RON tokens they send, which is what makes a key *that* shortcut --
+    not by label, which repeats.
+    """
+    from . import icons, opendeck
+
+    device = next(iter(opendeck.devices()), None)
+    if device is None:
+        print("error: no device under ~/.config/opendeck/profiles", file=sys.stderr)
+        return 1
+    profile = opendeck.profile_name_for(identity)
+    data = opendeck.load_profile(device, profile)
+    by_tokens = {sc.tokens: sc for sc in resolve(identity)}
+
+    pushed = missing = unmatched = 0
+    for position, key in enumerate(data.get("keys") or []):
+        if not key:
+            continue
+        sc = by_tokens.get(((key.get("settings") or {}).get("down") or ""))
+        if sc is None:
+            unmatched += 1
+            continue
+        result = icons.resolve(sc)
+        if result.data_uri is None:
+            missing += 1
+            continue
+        if opendeck.push_image(device, profile, position, result.data_uri):
+            print(f"{position}\t{sc.id}\t{result.origin}")
+            pushed += 1
+        else:
+            missing += 1
+    print(f"pushed {pushed} to the running OpenDeck ({profile} on {device}); "
+          f"{unmatched} key(s) not ours, {missing} without an icon", file=sys.stderr)
+    print("OpenDeck acknowledges nothing, so check the deck; the change persists when it exits.",
+          file=sys.stderr)
+    return 0 if pushed else 1
 
 
 def _publish_cached(identity: str, limit: int | None) -> int:

@@ -10,12 +10,16 @@ absolute path, and a relative one renders as a blank key.
 """
 
 import json
+import logging
 import os
 import re
 import shutil
+import subprocess
 from pathlib import Path
 
 # ~/.config/opendeck, overridable by $OPENDECK_CONFIG for tests and sandboxes.
+log = logging.getLogger(__name__)
+
 CONFIG_DIR = Path.home() / ".config" / "opendeck"
 
 RESERVED = (0, 1, 2)
@@ -58,6 +62,47 @@ def devices() -> list[str]:
 
 def profile_path(device: str, profile: str) -> Path:
     return _config_dir() / "profiles" / device / f"{profile}.json"
+
+
+def binary() -> str | None:
+    """The OpenDeck executable, for talking to a running instance."""
+    override = os.environ.get("OPENDECK_BINARY")
+    if override:
+        return override if Path(override).is_file() else None
+    for candidate in (Path.home() / ".local/bin/opendeck", Path("/usr/bin/opendeck")):
+        if candidate.is_file():
+            return str(candidate)
+    return shutil.which("opendeck")
+
+
+def push_image(device: str, profile: str, position: int, data_uri: str,
+               controller: str = "Keypad") -> bool:
+    """Set one key's image on a *running* OpenDeck, without touching its files.
+
+    Writing profiles needs OpenDeck stopped, because it holds them in memory and writes them
+    out on exit. This is the other door: the same `setImage` event its own plugins send. The
+    change lands in memory and is persisted when OpenDeck next exits.
+
+    OpenDeck answers nothing useful -- a malformed message is only a warning in its log -- so a
+    True here means "the message was delivered", not "the key changed".
+    """
+    executable = binary()
+    if executable is None:
+        log.error("no opendeck binary found; cannot push to a running instance")
+        return False
+    # The context is the flat string OpenDeck uses everywhere: device.profile.controller.pos.state
+    message = json.dumps({
+        "event": "setImage",
+        "context": f"{device}.{profile}.{controller}.{position}.0",
+        "payload": {"image": data_uri},
+    })
+    try:
+        done = subprocess.run([executable, "--process-message", message],
+                              capture_output=True, timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        log.exception("could not reach OpenDeck to set key %d", position)
+        return False
+    return done.returncode == 0
 
 
 def load_profile(device: str, profile: str) -> dict:

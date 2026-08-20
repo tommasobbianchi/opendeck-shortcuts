@@ -128,3 +128,32 @@ class ProfileShapeTestCase(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PushImageTestCase(unittest.TestCase):
+    """Talking to a running OpenDeck instead of rewriting its files."""
+
+    def test_the_context_is_the_flat_string_opendeck_expects(self):
+        seen = {}
+
+        def fake_run(args, **kwargs):
+            seen["message"] = json.loads(args[2])
+            return mock.Mock(returncode=0)
+
+        with mock.patch.object(opendeck, "binary", return_value="/usr/bin/opendeck"), \
+             mock.patch.object(opendeck.subprocess, "run", side_effect=fake_run):
+            self.assertTrue(opendeck.push_image("dev1", "prof", 6, "data:image/png;base64,AA"))
+        # Handing OpenDeck the object those fields came from is refused as
+        # "invalid type: map, expected a string", and only as a warning in its log.
+        self.assertEqual(seen["message"]["context"], "dev1.prof.Keypad.6.0")
+        self.assertEqual(seen["message"]["event"], "setImage")
+        self.assertEqual(seen["message"]["payload"]["image"], "data:image/png;base64,AA")
+
+    def test_without_a_binary_it_fails_rather_than_pretending(self):
+        with mock.patch.object(opendeck, "binary", return_value=None):
+            self.assertFalse(opendeck.push_image("dev1", "prof", 6, "data:x"))
+
+    def test_a_binary_that_errors_is_reported(self):
+        with mock.patch.object(opendeck, "binary", return_value="/usr/bin/opendeck"), \
+             mock.patch.object(opendeck.subprocess, "run", side_effect=OSError("boom")):
+            self.assertFalse(opendeck.push_image("dev1", "prof", 6, "data:x"))
