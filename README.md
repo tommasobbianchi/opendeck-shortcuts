@@ -30,6 +30,7 @@ shortcuts/
 catalogue/
   chrome.json           curated Chrome bindings
   claude.json           curated Claude Code bindings
+  opencode.json         opencode defaults, read out of the 1.18.18 binary
   orca.snapshot.json    OrcaSlicer fallback, for machines with no source tree
 tests/
   test_keys.py          encoder tests

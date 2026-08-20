@@ -1,0 +1,201 @@
+{
+  "app": "opencode",
+  "source": "opencode 1.18.18 binary, default keybind table (leader is ctrl+x)",
+  "shortcuts": [
+    {
+      "id": "opencode.agent_cycle",
+      "label": "Next agent",
+      "combo": "tab"
+    },
+    {
+      "id": "opencode.agent_cycle_reverse",
+      "label": "Previous agent",
+      "combo": "shift+tab"
+    },
+    {
+      "id": "opencode.app_exit",
+      "label": "Exit the application",
+      "combo": "ctrl+c"
+    },
+    {
+      "id": "opencode.app_exit",
+      "label": "Exit the application",
+      "combo": "ctrl+d"
+    },
+    {
+      "id": "opencode.command_list",
+      "label": "List available commands",
+      "combo": "ctrl+p"
+    },
+    {
+      "id": "opencode.input_backspace",
+      "label": "Backspace",
+      "combo": "shift+backspace"
+    },
+    {
+      "id": "opencode.input_delete",
+      "label": "Delete character",
+      "combo": "shift+delete"
+    },
+    {
+      "id": "opencode.input_line_end",
+      "label": "Move to end of line",
+      "combo": "ctrl+e"
+    },
+    {
+      "id": "opencode.input_line_home",
+      "label": "Move to start of line",
+      "combo": "ctrl+a"
+    },
+    {
+      "id": "opencode.input_newline",
+      "label": "Insert newline",
+      "combo": "shift+return"
+    },
+    {
+      "id": "opencode.input_newline",
+      "label": "Insert newline",
+      "combo": "ctrl+return"
+    },
+    {
+      "id": "opencode.input_newline",
+      "label": "Insert newline",
+      "combo": "alt+return"
+    },
+    {
+      "id": "opencode.input_newline",
+      "label": "Insert newline",
+      "combo": "ctrl+j"
+    },
+    {
+      "id": "opencode.input_paste",
+      "label": "Paste from clipboard",
+      "combo": "ctrl+v"
+    },
+    {
+      "id": "opencode.input_redo",
+      "label": "Redo",
+      "combo": "ctrl+."
+    },
+    {
+      "id": "opencode.input_redo",
+      "label": "Redo",
+      "combo": "super+shift+z"
+    },
+    {
+      "id": "opencode.input_submit",
+      "label": "Submit input",
+      "combo": "return"
+    },
+    {
+      "id": "opencode.input_undo",
+      "label": "Undo",
+      "combo": "ctrl+-"
+    },
+    {
+      "id": "opencode.input_undo",
+      "label": "Undo",
+      "combo": "super+z"
+    },
+    {
+      "id": "opencode.input_visual_line_end",
+      "label": "Move to end of visual line",
+      "combo": "alt+e"
+    },
+    {
+      "id": "opencode.input_visual_line_home",
+      "label": "Move to start of visual line",
+      "combo": "alt+a"
+    },
+    {
+      "id": "opencode.messages_first",
+      "label": "first message",
+      "combo": "ctrl+g"
+    },
+    {
+      "id": "opencode.messages_first",
+      "label": "first message",
+      "combo": "home"
+    },
+    {
+      "id": "opencode.messages_half_page_down",
+      "label": "Scroll messages down by half\u2026",
+      "combo": "ctrl+alt+d"
+    },
+    {
+      "id": "opencode.messages_half_page_up",
+      "label": "Scroll messages up by half pa\u2026",
+      "combo": "ctrl+alt+u"
+    },
+    {
+      "id": "opencode.messages_last",
+      "label": "last message",
+      "combo": "ctrl+alt+g"
+    },
+    {
+      "id": "opencode.messages_last",
+      "label": "last message",
+      "combo": "end"
+    },
+    {
+      "id": "opencode.messages_page_down",
+      "label": "Scroll messages down by one p\u2026",
+      "combo": "pagedown"
+    },
+    {
+      "id": "opencode.messages_page_down",
+      "label": "Scroll messages down by one p\u2026",
+      "combo": "ctrl+alt+f"
+    },
+    {
+      "id": "opencode.messages_page_up",
+      "label": "Scroll messages up by one page",
+      "combo": "pageup"
+    },
+    {
+      "id": "opencode.messages_page_up",
+      "label": "Scroll messages up by one page",
+      "combo": "ctrl+alt+b"
+    },
+    {
+      "id": "opencode.model_cycle_recent",
+      "label": "Next recently used model",
+      "combo": "f2"
+    },
+    {
+      "id": "opencode.model_cycle_recent_reverse",
+      "label": "Previous recently used model",
+      "combo": "shift+f2"
+    },
+    {
+      "id": "opencode.model_favorite_toggle",
+      "label": "Toggle model favorite status",
+      "combo": "ctrl+f"
+    },
+    {
+      "id": "opencode.session_background",
+      "label": "Background synchronous subage\u2026",
+      "combo": "ctrl+b"
+    },
+    {
+      "id": "opencode.session_interrupt",
+      "label": "Interrupt current session",
+      "combo": "escape"
+    },
+    {
+      "id": "opencode.session_rename",
+      "label": "Rename session",
+      "combo": "ctrl+r"
+    },
+    {
+      "id": "opencode.terminal_suspend",
+      "label": "Suspend terminal",
+      "combo": "ctrl+z"
+    },
+    {
+      "id": "opencode.variant_cycle",
+      "label": "Cycle model variants",
+      "combo": "ctrl+t"
+    }
+  ]
+}

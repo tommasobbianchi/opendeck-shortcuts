@@ -156,6 +156,12 @@
       return icon.startsWith("data:") ? icon : "/api/icon?path=" + encodeURIComponent(icon);
     }
 
+    // App art if the application ships some, otherwise whatever the resolver already had for
+    // this action -- a generated glyph from this machine's cache or from the shared store.
+    function artOf(sc) {
+      return sc.icon || sc.thumbnail || null;
+    }
+
 
   function shortcutById(id) {
     return state.shortcuts.find((s) => s.id === id);
@@ -188,10 +194,11 @@
           label.className = "slot-label";
           label.textContent = sc.label;
           cell.appendChild(label);
-          if (sc.icon) {
+          const art = artOf(sc);
+          if (art) {
             const img = document.createElement("img");
             img.className = "slot-icon";
-            img.src = iconSrc(sc.icon);
+            img.src = iconSrc(art);
             img.onerror = () => img.remove();
             cell.appendChild(img);
           }
@@ -233,10 +240,12 @@
       li.className = "shortcut";
       li.draggable = true;
 
-      if (sc.icon) {
+      const art = artOf(sc);
+      if (art) {
         const img = document.createElement("img");
         img.className = "thumb";
-        img.src = iconSrc(sc.icon);
+        img.src = iconSrc(art);
+        img.title = `icon: ${sc.icon ? "shipped by the app" : sc.icon_origin}`;
         img.onerror = () => img.remove();
         li.appendChild(img);
       }

@@ -43,6 +43,34 @@ class ServerTestCase(unittest.TestCase):
             return resp.status, json.loads(resp.read().decode("utf-8"))
 
 
+class TestThumbnails(ServerTestCase):
+    def test_a_row_with_no_app_art_carries_the_icon_this_machine_already_has(self):
+        import shutil as sh
+        from shortcuts import icons
+        cache = Path(self.tmp) / "icons"
+        os.environ["OPENDECK_ICON_CACHE"] = str(cache)
+        self.addCleanup(os.environ.pop, "OPENDECK_ICON_CACHE", None)
+        self.addCleanup(sh.rmtree, cache, True)
+
+        from shortcuts.providers import resolve as resolve_shortcuts
+        sc = resolve_shortcuts("claude")[0]
+        path = cache / f"{icons.cache_key(sc)}.png"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"\x89PNG\r\n\x1a\n" + b"pretend")
+
+        status, rows = self._get_json("/api/shortcuts?identity=claude")
+        self.assertEqual(status, 200)
+        row = next(r for r in rows if r["id"] == sc.id)
+        self.assertTrue(row["thumbnail"].startswith("data:image/png;base64,"))
+        self.assertEqual(row["icon_origin"], "cache")
+
+    def test_a_row_with_no_icon_anywhere_says_so_without_a_thumbnail(self):
+        status, rows = self._get_json("/api/shortcuts?identity=claude")
+        self.assertEqual(status, 200)
+        self.assertNotIn("thumbnail", rows[0])
+        self.assertEqual(rows[0]["icon_origin"], "none")
+
+
 class TestIdentities(ServerTestCase):
     def _publish(self, seen):
         path = Path(self.tmp) / "seen.json"

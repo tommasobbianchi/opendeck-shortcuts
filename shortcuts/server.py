@@ -233,9 +233,27 @@ def shortcuts_payload(identity: str, build_missing: bool = False) -> list[dict]:
             "icon": sc.icon,
             "app": sc.app,
             "collision": counts[sc.combo] > 1,
+            **_thumbnail(sc),
         }
         for sc in records
     ]
+
+
+def _thumbnail(sc) -> dict:
+    """A ready-to-show image for a shortcut whose application ships none.
+
+    Rows that do have app art keep going through the guarded /api/icon route, which costs one
+    rasterisation per row and only when the browser asks. Rows without it -- everything from
+    kitty, the curated files and the guessed provider -- would otherwise show nothing at all,
+    even when this machine already has a generated icon for them. Resolution here never
+    generates: it is cache and store only, so drawing the picker cannot spend money.
+    """
+    if sc.icon:
+        return {}
+    result = icons.resolve(sc)
+    if result.data_uri is None:
+        return {"icon_origin": result.origin}
+    return {"thumbnail": result.data_uri, "icon_origin": result.origin}
 
 
 def profile_payload(identity: str, device: str) -> dict:
