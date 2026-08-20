@@ -17,7 +17,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from . import opendeck
+from . import icons, opendeck
 from .providers import orca, resolve
 
 HERE = Path(__file__).resolve().parent
@@ -244,6 +244,8 @@ def apply_payload(payload: dict) -> tuple[int, dict]:
         keys.append(None)
 
     assignments = payload.get("assignments") or {}
+    generate_missing = bool(payload.get("generate"))
+    origins = {"app": 0, "cache": 0, "generated": 0, "none": 0}
     written = 0
     for position in range(opendeck.FIRST_KEY, opendeck.LAST_KEY + 1):
         sid = assignments.get(str(position))
@@ -251,7 +253,9 @@ def apply_payload(payload: dict) -> tuple[int, dict]:
         if sc is None:
             keys[position] = None
         else:
-            keys[position] = opendeck.input_key(position, sc.label, sc.tokens, sc.icon)
+            result = icons.resolve(sc, generate_missing=generate_missing)
+            keys[position] = opendeck.input_key(position, sc.label, sc.tokens, result.data_uri)
+            origins[result.origin] += 1
             written += 1
 
     data["keys"] = keys
@@ -260,7 +264,7 @@ def apply_payload(payload: dict) -> tuple[int, dict]:
     except RuntimeError as exc:
         return 409, {"ok": False, "error": str(exc)}
     opendeck.map_application(identity, device, profile)
-    return 200, {"ok": True, "profile": profile, "written": written}
+    return 200, {"ok": True, "profile": profile, "written": written, "icons": origins}
 
 
 def make_server(host: str = "127.0.0.1", port: int = 0) -> ThreadingHTTPServer:

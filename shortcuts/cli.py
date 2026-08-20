@@ -11,6 +11,8 @@ def main(argv: list[str] | None = None) -> int:
         argv = sys.argv[1:]
     if argv and argv[0] == "serve":
         return _serve_main(argv[1:])
+    if argv and argv[0] == "icons":
+        return _icons_main(argv[1:])
     return _catalogue_main(argv)
 
 
@@ -23,6 +25,22 @@ def _serve_main(argv: list[str]) -> int:
     parser.add_argument("--no-browser", action="store_true", help="do not open a browser")
     args = parser.parse_args(argv)
     return server.serve(port=args.port, identity=args.identity, no_browser=args.no_browser)
+
+
+def _icons_main(argv: list[str]) -> int:
+    from . import icons
+
+    parser = argparse.ArgumentParser(prog="shortcuts icons")
+    parser.add_argument("identity", help="app or app:program identity, e.g. 'orca'")
+    parser.add_argument("--generate", action="store_true", help="generate missing icons (network, costs money)")
+    parser.add_argument("--limit", type=int, default=None, help="only resolve the first N shortcuts")
+    args = parser.parse_args(argv)
+
+    shortcuts = resolve(args.identity)
+    results = icons.resolve_many(shortcuts, generate_missing=args.generate, limit=args.limit)
+    for sid, result in results.items():
+        print(f"{sid}\t{result.origin}\t{'yes' if result.data_uri else 'no'}")
+    return 0
 
 
 def _catalogue_main(argv: list[str]) -> int:

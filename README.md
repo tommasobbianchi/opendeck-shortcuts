@@ -14,6 +14,7 @@ An identity is either `app` (e.g. `kitty`) or `app:program` (e.g.
 shortcuts/
   model.py              Shortcut dataclass + Provenance literal
   keys.py               combo -> RON Token list encoder (the exact part)
+  icons.py              icon resolution: app art, then cache, then generated
   opendeck.py           OpenDeck profile IO (read/write, no HTTP)
   server.py             localhost picker server
   assets/picker.html    the picker page (inline CSS + JS)
@@ -33,8 +34,10 @@ tests/
   test_orca.py          OrcaSlicer provider tests
   test_opendeck.py      profile IO tests
   test_server.py        picker server tests
+  test_icons.py         icon resolution tests
   fixtures/kitty.conf   the user's real kitty config
   fixtures/KBShortcutsDialog_excerpt.cpp
+  fixtures/tiny.svg     a hand-written SVG for the rasterise test
 ```
 
 ## Usage
@@ -44,9 +47,31 @@ python3 -m shortcuts kitty             # combo<TAB>provenance<TAB>label per row
 python3 -m shortcuts kitty:chrome      # both segments
 python3 -m shortcuts kitty --json      # full records, incl. tokens
 python3 -m shortcuts --check 'ctrl+shift+o'
+python3 -m shortcuts icons orca        # id<TAB>origin<TAB>has-data-uri per row
+python3 -m shortcuts icons orca --limit 8 --generate
 ```
 
 `--check` exits non-zero when the combo is rejected.
+
+## Icon resolution (`shortcuts/icons.py`)
+
+Each key needs a 96x96 image. Three sources, in order, never guessing:
+
+1. **App art** — `Shortcut.icon`, the artwork the application ships (OrcaSlicer's
+   own SVGs). Free, exact, offline. SVGs are rasterised through ImageMagick
+   `convert`; `.png`/`.jpg`/`.jpeg`/`.webp` through Pillow.
+2. **Cache** — `~/.cache/opendeck-shortcuts/icons/<key>.png`, overridable by
+   `$OPENDECK_ICON_CACHE`. Anything generated once is never generated twice.
+3. **Generated** — only when explicitly asked for, via the local `infsh` binary.
+   It costs money and needs the network, so it is never implicit.
+
+`python3 -m shortcuts icons <identity>` reports the origin of every key's icon
+(`app`, `cache`, `generated`, or `none`). Without `--generate` it makes no
+network calls at all; the generated prompt asks for a flat minimalist glyph with
+**no text** (the deck draws its own text over the image), and the result is
+cached. `POST /api/apply` accepts `"generate": true` to allow step 3 and reports
+per-key origins as `{"icons": {"app": n, "cache": n, "generated": n, "none": n}}`;
+it defaults to false so applying never spends money unasked.
 
 ## The picker
 
