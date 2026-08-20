@@ -15,6 +15,7 @@ shortcuts/
   model.py              Shortcut dataclass + Provenance literal
   keys.py               combo -> RON Token list encoder (the exact part)
   icons.py              icon resolution: app art, then cache, then generated
+  focus.py              which identities opendeck-focus has actually published
   opendeck.py           OpenDeck profile IO (read/write, no HTTP)
   server.py             localhost picker server
   assets/picker.html    the picker page (inline CSS + JS)
@@ -23,6 +24,7 @@ shortcuts/
     kitty.py            extracts `map` lines from the kitty config
     curated.py          loads catalogue/*.json
     orca.py             extracts shortcuts + icons from an OrcaSlicer tree
+    guessed.py          last resort: asks a local model, validates, caches
   cli.py                command line interface
 catalogue/
   chrome.json           curated Chrome bindings
@@ -30,6 +32,8 @@ catalogue/
   orca.snapshot.json    OrcaSlicer fallback, for machines with no source tree
 tests/
   test_keys.py          encoder tests
+  test_focus.py         published-identity tests
+  test_guessed.py       guessed-provider tests (no network)
   test_providers.py     provider + resolve tests
   test_orca.py          OrcaSlicer provider tests
   test_opendeck.py      profile IO tests
@@ -52,6 +56,37 @@ python3 -m shortcuts icons orca --limit 8 --generate
 ```
 
 `--check` exits non-zero when the combo is rejected.
+
+```sh
+python3 -m shortcuts guess inkscape       # no catalogue? ask the local model, once
+```
+
+## Identity, and why the picker nags about it
+
+OpenDeck matches an application by the WM_CLASS its watcher reads, which on GNOME Wayland is
+whatever `opendeck-focus` publishes: `OrcaSlicer`, `OrcaBelt2608`, `kitty:claude`. A catalogue
+name like `orca` is a different string, and a profile mapped under it never fires — silently,
+which is the worst way to fail.
+
+So the daemon writes every class it publishes to `~/.cache/opendeck-focus/seen.json`, and
+`shortcuts/focus.py` reads it. The picker offers those names in the identity box and says so
+when the name in the box has never been published. Applying anyway is allowed: setting up an
+app before its first focus is legitimate.
+
+## Guessing (`shortcuts/providers/guessed.py`)
+
+For an application no provider knows, a local Ollama model is asked for a catalogue. Two rules
+keep a guess honest:
+
+* every combo is run through `keys.encode`, so an invented syntax is dropped rather than
+  written to a key that does nothing;
+* the answer is cached per app under `~/.cache/opendeck-shortcuts/catalogue`, editable by hand,
+  and never asked for twice.
+
+Records come back with provenance `guessed`, which loses to every real source. Nothing triggers
+it implicitly — `resolve(identity, build_missing=True)`, `shortcuts guess`, or the picker's
+button, which appears only when nothing at all is known. `$OPENDECK_GUESS_MODEL` and
+`$OLLAMA_HOST` override the defaults.
 
 ## Icon resolution (`shortcuts/icons.py`)
 

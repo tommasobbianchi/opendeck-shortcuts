@@ -13,6 +13,8 @@ def main(argv: list[str] | None = None) -> int:
         return _serve_main(argv[1:])
     if argv and argv[0] == "icons":
         return _icons_main(argv[1:])
+    if argv and argv[0] == "guess":
+        return _guess_main(argv[1:])
     return _catalogue_main(argv)
 
 
@@ -40,6 +42,35 @@ def _icons_main(argv: list[str]) -> int:
     results = icons.resolve_many(shortcuts, generate_missing=args.generate, limit=args.limit)
     for sid, result in results.items():
         print(f"{sid}\t{result.origin}\t{'yes' if result.data_uri else 'no'}")
+    return 0
+
+
+def _guess_main(argv: list[str]) -> int:
+    from .providers import guessed
+
+    parser = argparse.ArgumentParser(
+        prog="shortcuts guess",
+        description="Ask the local model for an app nobody has written a catalogue for. "
+        "Slow, offline, and cached: run it once per app.",
+    )
+    parser.add_argument("identity", help="app identity, e.g. 'inkscape'")
+    parser.add_argument("--model", default=None, help=f"Ollama model (default {guessed.DEFAULT_MODEL})")
+    parser.add_argument("--host", default=None, help=f"Ollama host (default {guessed.DEFAULT_HOST})")
+    parser.add_argument("--force", action="store_true", help="ask again even if a catalogue is cached")
+    args = parser.parse_args(argv)
+
+    path = guessed.cache_file(args.identity)
+    if path.is_file() and not args.force:
+        print(f"already guessed: {path} (use --force to ask again)", file=sys.stderr)
+        records = guessed.shortcuts(args.identity)
+    else:
+        records = guessed.build(args.identity, model=args.model, host=args.host)
+    if not records:
+        print("error: nothing usable came back; see the log for why", file=sys.stderr)
+        return 1
+    for s in records:
+        print(f"{s.combo}\t{s.provenance}\t{s.label}")
+    print(f"cached in {path}", file=sys.stderr)
     return 0
 
 

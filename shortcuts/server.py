@@ -137,7 +137,12 @@ class Handler(BaseHTTPRequestHandler):
         elif parsed.path == "/api/identity":
             self._send_json({"identity": resolve_identity(query)})
         elif parsed.path == "/api/shortcuts":
-            self._send_json(shortcuts_payload(query.get("identity", [""])[0]))
+            self._send_json(
+                shortcuts_payload(
+                    query.get("identity", [""])[0],
+                    build_missing=query.get("build", ["0"])[0] == "1",
+                )
+            )
         elif parsed.path == "/api/profile":
             self._send_json(
                 profile_payload(
@@ -209,8 +214,10 @@ def resolve_identity(query: dict) -> str:
         return ""
 
 
-def shortcuts_payload(identity: str) -> list[dict]:
-    records = resolve(identity)
+def shortcuts_payload(identity: str, build_missing: bool = False) -> list[dict]:
+    # build_missing runs a local model and takes tens of seconds, so it is never the default:
+    # the picker asks for it explicitly, on a page that has told the user what it costs.
+    records = resolve(identity, build_missing=build_missing)
     counts: dict[str, int] = {}
     for sc in records:
         counts[sc.combo] = counts.get(sc.combo, 0) + 1

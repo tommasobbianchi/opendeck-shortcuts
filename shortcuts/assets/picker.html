@@ -44,6 +44,12 @@
     font-size: 12px; color: var(--warn); border: 1px solid var(--warn); background: #2a1f0d;
   }
   #identitywarning.show { display: block; }
+  #guess {
+    display: none; margin: 10px auto; padding: 7px 12px; border: 1px solid var(--warn);
+    background: transparent; color: var(--warn); border-radius: 4px; cursor: pointer;
+  }
+  #guess.show { display: block; }
+  #guess:disabled { opacity: .6; cursor: default; }
   #result.err { color: var(--danger); }
 
   main { display: flex; gap: 18px; padding: 18px; align-items: flex-start; }
@@ -115,6 +121,7 @@
 
 <main>
   <section id="left">
+    <button id="guess"></button>
     <div class="filters">
       <input id="textfilter" placeholder="Filter by label or combo...">
       <select id="catfilter"><option value="">All categories</option></select>
@@ -323,6 +330,31 @@
     box.classList.toggle("show", Boolean(text));
   }
 
+  // An application nobody has written a catalogue for is not a dead end: a local model can
+  // guess one. It is slow and it is a guess, so it is offered rather than done.
+  function offerGuess() {
+    const button = $("guess");
+    const offer = Boolean(state.identity) && state.shortcuts.length === 0;
+    button.classList.toggle("show", offer);
+    button.disabled = false;
+    if (offer) {
+      button.textContent = `No shortcuts known for "${state.identity}" \u2014 ask the local model (slow)`;
+    }
+  }
+
+  async function guessShortcuts() {
+    const button = $("guess");
+    button.disabled = true;
+    button.textContent = "Asking the local model, this takes a while...";
+    try {
+      state.shortcuts = await fetchJSON(
+        "/api/shortcuts?build=1&identity=" + encodeURIComponent(state.identity));
+    } finally {
+      renderList();
+      offerGuess();
+    }
+  }
+
   async function loadDevices() {
     const devs = await fetchJSON("/api/devices");
     const sel = $("device");
@@ -336,11 +368,12 @@
   }
 
   async function loadShortcuts() {
-    if (!state.identity) { state.shortcuts = []; renderList(); return; }
+    if (!state.identity) { state.shortcuts = []; renderList(); offerGuess(); return; }
     state.shortcuts = await fetchJSON(
       "/api/shortcuts?identity=" + encodeURIComponent(state.identity));
     rebuildCategoryFilter();
     renderList();
+    offerGuess();
     await loadProfile();
   }
 
@@ -393,6 +426,7 @@
     loadProfile();
   });
   $("apply").addEventListener("click", apply);
+  $("guess").addEventListener("click", guessShortcuts);
 
   window.addEventListener("DOMContentLoaded", async () => {
     await loadIdentity();
