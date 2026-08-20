@@ -15,6 +15,8 @@ def main(argv: list[str] | None = None) -> int:
         return _icons_main(argv[1:])
     if argv and argv[0] == "guess":
         return _guess_main(argv[1:])
+    if argv and argv[0] == "autofill":
+        return _autofill_main(argv[1:])
     return _catalogue_main(argv)
 
 
@@ -67,6 +69,75 @@ def _icons_main(argv: list[str]) -> int:
         shortcuts, generate_missing=args.generate, limit=args.limit, publish=args.publish)
     for sid, result in results.items():
         print(f"{sid}\t{result.origin}\t{'yes' if result.data_uri else 'no'}")
+    return 0
+
+
+def _autofill_main(argv: list[str]) -> int:
+    """Catalogue, icons and a profile for one application, in one go.
+
+    The whole of Auto mode for a single identity: whatever a provider knows (asking the local
+    model when nothing does), an icon per shortcut, and a profile OpenDeck will load, mapped to
+    the identity so it appears when that application takes focus.
+
+    Deliberately not clever about *which* shortcuts get keys -- the first `--limit` of them, in
+    provider order. Choosing is what the picker is for; this is for filling a deck without
+    sitting there.
+    """
+    from . import icons, opendeck
+    from .providers import resolve as resolve_shortcuts
+
+    parser = argparse.ArgumentParser(
+        prog="shortcuts autofill",
+        description="Build a catalogue, resolve icons and write a profile for one identity.",
+    )
+    parser.add_argument("identity", help="the WM_CLASS the focus daemon publishes, e.g. 'google-chrome'")
+    parser.add_argument("--device", default=None, help="device id (default: the only one)")
+    parser.add_argument("--limit", type=int, default=15, help="keys to fill (default 15, the deck's count)")
+    parser.add_argument("--generate", action="store_true", help="draw missing icons (costs money)")
+    parser.add_argument("--publish", action="store_true", help="share what was generated")
+    parser.add_argument("--dry-run", action="store_true", help="say what would happen, write nothing")
+    args = parser.parse_args(argv)
+
+    device = args.device or next(iter(opendeck.devices()), None)
+    if device is None:
+        print("error: no device under ~/.config/opendeck/profiles", file=sys.stderr)
+        return 1
+
+    records = resolve_shortcuts(args.identity, build_missing=True)
+    if not records:
+        print(f"error: nothing known about {args.identity!r} and the model gave us nothing",
+              file=sys.stderr)
+        return 1
+    slots = min(args.limit, opendeck.LAST_KEY - opendeck.FIRST_KEY + 1)
+    chosen = records[:slots]
+    print(f"{args.identity}: {len(records)} shortcut(s), filling {len(chosen)} key(s)")
+
+    results = icons.resolve_many(chosen, generate_missing=args.generate, publish=args.publish)
+    origins: dict[str, int] = {}
+    for result in results.values():
+        origins[result.origin] = origins.get(result.origin, 0) + 1
+    print(f"  icons: {origins}")
+    if args.dry_run:
+        print("  (dry run: nothing written)")
+        return 0
+
+    profile = opendeck.profile_name_for(args.identity)
+    data = opendeck.load_profile(device, profile)
+    keys = list(data.get("keys") or [])
+    while len(keys) <= opendeck.LAST_KEY:
+        keys.append(None)
+    for offset, sc in enumerate(chosen):
+        position = opendeck.FIRST_KEY + offset
+        keys[position] = opendeck.input_key(
+            position, sc.label, sc.tokens, results[sc.id].data_uri)
+    data["keys"] = keys
+    try:
+        opendeck.save_profile(device, profile, data)
+    except RuntimeError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    opendeck.map_application(args.identity, device, profile)
+    print(f"  wrote profile {profile!r} on {device} and mapped {args.identity!r} to it")
     return 0
 
 

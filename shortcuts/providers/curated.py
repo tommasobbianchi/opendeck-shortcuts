@@ -25,6 +25,18 @@ def _files() -> list[Path]:
     return out
 
 
+def _identities(data: dict) -> list[str]:
+    """The names a catalogue answers to.
+
+    A curated file is written for an application, but the identity a deck asks about is a
+    WM_CLASS: `google-chrome`, not `chrome`. Rather than duplicate the file, a catalogue may
+    list the other names it covers under "also".
+    """
+    also = data.get("also")
+    extra = [a for a in also if isinstance(a, str)] if isinstance(also, list) else []
+    return [data["app"], *extra]
+
+
 def _app_of(path: Path) -> str:
     return json.loads(path.read_text(encoding="utf-8"))["app"]
 
@@ -32,10 +44,11 @@ def _app_of(path: Path) -> str:
 def matches(segment: str) -> bool:
     for f in _files():
         try:
-            if _app_of(f) == segment:
-                return True
+            data = json.loads(f.read_text(encoding="utf-8"))
         except Exception:
             continue
+        if segment in _identities(data):
+            return True
     return False
 
 
@@ -46,7 +59,7 @@ def shortcuts(segment: str) -> list[Shortcut]:
             data = json.loads(f.read_text(encoding="utf-8"))
         except Exception:
             continue
-        if data["app"] != segment:
+        if segment not in _identities(data):
             continue
         source = data["source"]
         for entry in data["shortcuts"]:

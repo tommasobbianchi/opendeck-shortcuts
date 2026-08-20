@@ -51,6 +51,7 @@ tests/
 ## Usage
 
 ```sh
+python3 -m shortcuts autofill google-chrome --generate   # catalogue + icons + profile, one app
 python3 -m shortcuts kitty             # combo<TAB>provenance<TAB>label per row
 python3 -m shortcuts kitty:chrome      # both segments
 python3 -m shortcuts kitty --json      # full records, incl. tokens
