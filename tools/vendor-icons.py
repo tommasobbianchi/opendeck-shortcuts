@@ -246,6 +246,8 @@ ORCACAD_ICONS = {
     "import_mesh": "param_triangles",
     # A visibility toggle, not the Plane feature -- the eye says which it is.
     "show_planes": "design_eye",
+    "commit_to_plate": "toolbar_add_plate",
+    "show_bed": "plate_arrange",
 }
 
 ORCACAD_TREES = (

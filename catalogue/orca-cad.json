@@ -259,6 +259,18 @@
 			"label": "Show/hide planes",
 			"combo": "p",
 			"category": "feature"
+		},
+		{
+			"id": "OrcaSlicer.commit_to_plate",
+			"label": "Commit to plate",
+			"combo": "ctrl+shift+p",
+			"category": "feature"
+		},
+		{
+			"id": "OrcaSlicer.show_bed",
+			"label": "Show/hide bed",
+			"combo": "ctrl+shift+b",
+			"category": "feature"
 		}
 	],
 	"note": "Orca CAD is the Design view of OrcaSlicer, not a separate application: same process, same window, same WM_CLASS. Its tools are dial pages of the OrcaSlicer profile. Sketch tools are single letters and only live while a sketch is open; feature tools are shift+letter. The category is the key table the tool lives in: a sketch-mode letter and a feature-mode letter can be the same letter and mean different things."
