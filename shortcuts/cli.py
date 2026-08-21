@@ -93,6 +93,8 @@ def _autofill_main(argv: list[str]) -> int:
     parser.add_argument("identity", help="the WM_CLASS the focus daemon publishes, e.g. 'google-chrome'")
     parser.add_argument("--device", default=None, help="device id (default: the only one)")
     parser.add_argument("--limit", type=int, default=15, help="keys to fill (default 15, the deck's count)")
+    parser.add_argument("--bank", type=int, default=1,
+                        help="which page of keys (1 is the plain identity, 2+ publish <identity>#N)")
     parser.add_argument("--generate", action="store_true", help="draw missing icons (costs money)")
     parser.add_argument("--publish", action="store_true", help="share what was generated")
     parser.add_argument("--dry-run", action="store_true", help="say what would happen, write nothing")
@@ -109,8 +111,18 @@ def _autofill_main(argv: list[str]) -> int:
               file=sys.stderr)
         return 1
     slots = min(args.limit, opendeck.LAST_KEY - opendeck.FIRST_KEY + 1)
-    chosen = records[:slots]
-    print(f"{args.identity}: {len(records)} shortcut(s), filling {len(chosen)} key(s)")
+    if args.bank < 1:
+        parser.error("--bank counts from 1")
+    # Page 2 carries the shortcuts page 1 had no room for, and so on.
+    start = (args.bank - 1) * slots
+    chosen = records[start:start + slots]
+    if not chosen:
+        print(f"error: {args.identity} has {len(records)} shortcut(s); page {args.bank} would be empty",
+              file=sys.stderr)
+        return 1
+    banked = args.identity if args.bank == 1 else f"{args.identity}#{args.bank}"
+    print(f"{banked}: {len(records)} shortcut(s), filling {len(chosen)} key(s) "
+          f"from #{start + 1}")
 
     results = icons.resolve_many(chosen, generate_missing=args.generate, publish=args.publish)
     origins: dict[str, int] = {}
@@ -121,7 +133,7 @@ def _autofill_main(argv: list[str]) -> int:
         print("  (dry run: nothing written)")
         return 0
 
-    profile = opendeck.profile_name_for(args.identity)
+    profile = opendeck.profile_name_for(banked)
     data = opendeck.load_profile(device, profile)
     keys = list(data.get("keys") or [])
     while len(keys) <= opendeck.LAST_KEY:
@@ -131,13 +143,15 @@ def _autofill_main(argv: list[str]) -> int:
         keys[position] = opendeck.input_key(
             position, sc.label, sc.tokens, results[sc.id].data_uri)
     data["keys"] = keys
+    # Every page carries the dial, or you can turn onto a page you cannot turn off.
+    data["sliders"] = [opendeck.dial_key()]
     try:
         opendeck.save_profile(device, profile, data)
     except RuntimeError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
-    opendeck.map_application(args.identity, device, profile)
-    print(f"  wrote profile {profile!r} on {device} and mapped {args.identity!r} to it")
+    opendeck.map_application(banked, device, profile)
+    print(f"  wrote profile {profile!r} on {device} and mapped {banked!r} to it")
     return 0
 
 

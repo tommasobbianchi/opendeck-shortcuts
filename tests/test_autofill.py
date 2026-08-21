@@ -38,6 +38,33 @@ class AutofillTestCase(unittest.TestCase):
         data = self._profile("chrome")
         self.assertLessEqual(len([k for k in data["keys"] if k]), 15)
 
+    def test_a_second_page_carries_what_the_first_had_no_room_for(self):
+        cli.main(["autofill", "chrome", "--limit", "4"])
+        cli.main(["autofill", "chrome", "--limit", "4", "--bank", "2"])
+        first = self._profile("chrome")
+        second = self._profile("chrome_2")
+        labels = lambda d: [k["action"]["tooltip"] for k in d["keys"] if k]
+        self.assertEqual(len(labels(first)), 4)
+        self.assertEqual(len(labels(second)), 4)
+        self.assertFalse(set(labels(first)) & set(labels(second)), "no shortcut on two pages")
+
+        apps = json.loads((__import__("pathlib").Path(self.tmp) / "applications.json").read_text())
+        self.assertEqual(apps["chrome"]["n1-test"], "chrome")
+        self.assertEqual(apps["chrome#2"]["n1-test"], "chrome_2")
+
+    def test_every_page_carries_the_dial(self):
+        cli.main(["autofill", "chrome", "--limit", "4"])
+        slot = self._profile("chrome")["sliders"][0]
+        self.assertEqual(slot["context"], "Encoder.0.0")
+        self.assertIn("page next", slot["settings"]["rotate"])
+        self.assertEqual(slot["settings"]["down"], "", "a turn pages; a press does not")
+
+    def test_a_page_past_the_end_is_refused_rather_than_written_empty(self):
+        code = cli.main(["autofill", "chrome", "--limit", "15", "--bank", "3"])
+        self.assertEqual(code, 1)
+        import pathlib
+        self.assertFalse((pathlib.Path(self.tmp) / "profiles" / "n1-test" / "chrome_3.json").exists())
+
     def test_a_dry_run_writes_nothing(self):
         import pathlib
         code = cli.main(["autofill", "chrome", "--limit", "2", "--dry-run"])

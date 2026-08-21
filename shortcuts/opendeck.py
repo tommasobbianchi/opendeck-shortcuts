@@ -218,6 +218,52 @@ def input_key(position: int, label: str, ron: str, icon: str | None) -> dict:
     }
 
 
+_RUN_COMMAND_UUID = "com.amansprojects.starterpack.runcommand"
+
+#: What the dial runs on every turn. The daemon counts the pages that exist and wraps, so one
+#: command covers both directions -- the encoder reports a turn, not which way, through the
+#: Run Command action's single `rotate` field.
+PAGE_COMMAND = "%h/.local/bin/opendeck-focus page next"
+
+
+def dial_key(command: str = PAGE_COMMAND, label: str = "Page") -> dict:
+    """The encoder slot: turning the knob runs a command.
+
+    A deck with fifteen keys and an application with forty shortcuts needs pages, and the knob
+    is the obvious thing to turn them with. The Starter Pack's Run Command action accepts the
+    Encoder controller and carries a `rotate` command, which is the only part of a rotation
+    OpenDeck passes on -- there is no direction in it, which is why paging wraps.
+    """
+    home = str(Path.home())
+    return {
+        "action": {
+            "controllers": ["Keypad", "Encoder"],
+            "disable_automatic_states": False,
+            "encoder": None,
+            "icon": "",
+            "name": "Run Command",
+            "plugin": _STARTERPACK,
+            "property_inspector": f"plugins/{_STARTERPACK}/propertyInspector/runCommand.html",
+            "states": [_state("")],
+            "supported_in_multi_actions": True,
+            "tooltip": label,
+            "uuid": _RUN_COMMAND_UUID,
+            "visible_in_action_list": True,
+        },
+        "children": None,
+        "context": "Encoder.0.0",
+        "current_state": 0,
+        "settings": {
+            "down": "",
+            "up": "",
+            "file": "",
+            "show": False,
+            "rotate": command.replace("%h", home),
+        },
+        "states": [_state("", label)],
+    }
+
+
 def applications() -> dict:
     """Read ``<config>/applications.json``; ``{}`` when absent or unreadable."""
     path = _config_dir() / "applications.json"
