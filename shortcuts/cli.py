@@ -222,7 +222,9 @@ def _push_live(identity: str) -> int:
         return 1
     profile = opendeck.profile_name_for(identity)
     data = opendeck.load_profile(device, profile)
-    by_tokens = {sc.tokens: sc for sc in resolve(identity)}
+    # A page is the same application with a "#N" suffix, and no provider knows that suffix:
+    # ask about the identity itself, or pages 2+ resolve to the bare app and match nothing.
+    by_tokens = {sc.tokens: sc for sc in resolve(identity.split("#", 1)[0])}
 
     pushed = missing = unmatched = 0
     for position, key in enumerate(data.get("keys") or []):
