@@ -5,17 +5,17 @@
 	"OrcaBelt2608": {
 		"n1-81D0DA783809": "OrcaBelt2608"
 	},
-	"OrcaCAD": {
-		"n1-81D0DA783809": "OrcaCAD"
-	},
-	"OrcaCAD#2": {
-		"n1-81D0DA783809": "OrcaCAD_2"
-	},
-	"OrcaCAD#3": {
-		"n1-81D0DA783809": "OrcaCAD_3"
-	},
 	"OrcaSlicer": {
 		"n1-81D0DA783809": "OrcaSlicer"
+	},
+	"OrcaSlicer#2": {
+		"n1-81D0DA783809": "OrcaSlicer_2"
+	},
+	"OrcaSlicer#3": {
+		"n1-81D0DA783809": "OrcaSlicer_3"
+	},
+	"OrcaSlicer#4": {
+		"n1-81D0DA783809": "OrcaSlicer_4"
 	},
 	"WhatsApp Desktop": {
 		"n1-81D0DA783809": "WhatsApp_Desktop"

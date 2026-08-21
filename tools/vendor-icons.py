@@ -767,7 +767,8 @@ def cmd_orcacad(args: argparse.Namespace) -> int:
             missing.append(f"{action}: no {stem}.svg under {tree}")
             continue
         jobs[action] = source
-    rc = write_all("OrcaCAD", jobs, args.size, sheet=args.sheet, auto_light=True)
+    # The Design view is part of OrcaSlicer, so its art lands in the slicer's folder.
+    rc = write_all("OrcaSlicer", jobs, args.size, sheet=args.sheet, auto_light=True)
     for line in missing:
         print("MISSING", line)
     return rc or (1 if missing else 0)
