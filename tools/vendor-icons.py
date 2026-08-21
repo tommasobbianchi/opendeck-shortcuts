@@ -197,6 +197,61 @@ ORCA_TREES = (
 )
 
 
+# Orca CAD draws its own CAD tools, and ships the art for them beside its source as
+# design_*.svg -- the same relationship Onshape has with its sprite. The keys come from
+# DesignPanel's m_keys_sketch (single letters, live inside a sketch) and m_keys_feature
+# (shift+letter). Surface tools reuse the solid glyphs, because Orca CAD does.
+ORCACAD_ICONS = {
+    "line": "design_line",
+    "rectangle": "design_crect",
+    "circle": "design_circle",
+    "arc": "design_arc3pt",
+    "slot": "design_slot",
+    "ellipse": "design_ellipse",
+    "spline": "design_bspline",
+    "point": "design_point",
+    "polygon": "design_polygon",
+    "dimension": "design_dimension",
+    "trim": "design_trim",
+    "extend": "design_extend",
+    "offset": "design_offset",
+    "sketch_fillet": "design_filletedge",
+    "sketch_chamfer": "design_chamfer",
+    "sketch_mirror": "design_mirror",
+    "constrain": "design_constrain",
+    "construction": "design_construction",
+    "sketch": "design_sketch",
+    "extrude": "design_extrude",
+    "revolve": "design_revolve",
+    "sweep": "design_sweep",
+    "loft": "design_loft",
+    "pattern": "design_pattern",
+    "boolean": "design_boolean",
+    "cut": "design_cut",
+    "dressup": "design_dressup",
+    "draft": "design_draft",
+    "shell": "design_shell",
+    "hole": "design_hole",
+    "thread": "design_thread",
+    "plane": "design_plane",
+    "axis": "design_line",
+    "coord_sys": "design_point",
+    "thicken": "design_thicken",
+    "surface_extrude": "design_extrude",
+    "surface_revolve": "design_revolve",
+    "surface_loft": "design_loft",
+    "surface_fill": "design_surface",
+    "surface_offset": "design_offset",
+    "import_step": "design_step",
+    "import_mesh": "param_triangles",
+}
+
+ORCACAD_TREES = (
+    "~/projects/orca/orcacad-native/src/resources/images",
+    "~/projects/orca/snapmaker-orca/snaporca_freecad/resources/images",
+)
+
+
 # Gmail's interface is drawn with Google's Material Symbols, which Google serves as SVG.
 # Single-colour by design, like GTK's symbolic set, so the deck tints them the same way.
 MATERIAL = "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined"
@@ -664,7 +719,13 @@ def cmd_audit(args: argparse.Namespace) -> int:
             data = opendeck.load_profile(device, profile)
         except Exception:
             continue
-        by_tokens = {sc.tokens: sc for sc in resolve_shortcuts(identity.split("#", 1)[0])}
+        base = identity.split("#", 1)[0]
+        # Most specific catalogue wins a shared keystroke -- see cli._push_live.
+        by_tokens = {}
+        for sc in resolve_shortcuts(base):
+            previous = by_tokens.get(sc.tokens)
+            if previous is None or (sc.app == base and previous.app != base):
+                by_tokens[sc.tokens] = sc
         counts: dict[str, int] = {}
         strays = []
         for key in data.get("keys") or []:
@@ -688,6 +749,31 @@ def cmd_audit(args: argparse.Namespace) -> int:
 
 
 
+def cmd_orcacad(args: argparse.Namespace) -> int:
+    tree = None
+    for candidate in ([args.tree] if args.tree else list(ORCACAD_TREES)):
+        path = Path(candidate).expanduser()
+        if path.is_dir():
+            tree = path
+            break
+    if tree is None:
+        sys.exit("no Orca CAD resources/images tree found; pass --tree")
+    print(f"tree    {tree}")
+    jobs, missing = {}, []
+    for action, stem in ORCACAD_ICONS.items():
+        dark, plain = tree / f"{stem}_dark.svg", tree / f"{stem}.svg"
+        source = dark if dark.exists() else plain
+        if not source.exists():
+            missing.append(f"{action}: no {stem}.svg under {tree}")
+            continue
+        jobs[action] = source
+    rc = write_all("OrcaCAD", jobs, args.size, sheet=args.sheet, auto_light=True)
+    for line in missing:
+        print("MISSING", line)
+    return rc or (1 if missing else 0)
+
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     sub = ap.add_subparsers(dest="app", required=True)
@@ -708,6 +794,12 @@ def main() -> int:
     r.add_argument("--size", type=int, default=96)
     r.add_argument("--sheet", help="also write a labelled contact sheet here")
     r.set_defaults(func=cmd_orca)
+
+    c = sub.add_parser("orcacad", help="Orca CAD's design_*.svg set, from its source tree")
+    c.add_argument("--tree", help="path to resources/images (default: the first known checkout)")
+    c.add_argument("--size", type=int, default=96)
+    c.add_argument("--sheet", help="also write a labelled contact sheet here")
+    c.set_defaults(func=cmd_orcacad)
 
     m = sub.add_parser("material", help="Google's Material Symbols, as Gmail draws them")
     m.add_argument("--app", default="gmail", help="app-art folder to fill")

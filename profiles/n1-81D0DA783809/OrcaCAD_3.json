@@ -1,0 +1,959 @@
+{
+	"infobars": [],
+	"keys": [
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Run Command",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/runCommand.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Launcher",
+				"uuid": "com.amansprojects.starterpack.runcommand",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.0.0",
+			"current_state": 0,
+			"settings": {
+				"down": "/home/tommaso/.local/bin/opendeck-focus mode launcher",
+				"file": "",
+				"rotate": "",
+				"show": false,
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "",
+					"image_scale": 100,
+					"name": "Launcher",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "Launcher",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Run Command",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/runCommand.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Auto",
+				"uuid": "com.amansprojects.starterpack.runcommand",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.1.0",
+			"current_state": 0,
+			"settings": {
+				"down": "/home/tommaso/.local/bin/opendeck-focus mode contextual",
+				"file": "",
+				"rotate": "",
+				"show": false,
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "",
+					"image_scale": 100,
+					"name": "Auto",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "Auto",
+					"underline": false
+				}
+			]
+		},
+		null,
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Thread",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.3.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('t'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Thread",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Plane",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.4.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('p'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Plane",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Axis",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.5.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('a'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Axis",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Coord system",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.6.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('c'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Coord system",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Thicken",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.7.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('v'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Thicken",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Surface extrude",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.8.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('g'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Surface extrude",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Surface revolve",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.9.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('j'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Surface revolve",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Surface loft",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.10.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('o'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Surface loft",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Surface fill",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.11.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('q'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Surface fill",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Surface offset",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.12.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('u'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Surface offset",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Import STEP",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.13.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('i'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Import STEP",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Import mesh",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.14.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('m'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Import mesh",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		null,
+		null,
+		null
+	],
+	"sliders": [
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Run Command",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/runCommand.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Page",
+				"uuid": "com.amansprojects.starterpack.runcommand",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Encoder.0.0",
+			"current_state": 0,
+			"settings": {
+				"down": "",
+				"file": "",
+				"rotate": "/home/tommaso/.local/bin/opendeck-focus page next",
+				"show": false,
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "",
+					"image_scale": 100,
+					"name": "Page",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "Page",
+					"underline": false
+				}
+			]
+		}
+	]
+}

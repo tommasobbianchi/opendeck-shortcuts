@@ -1,0 +1,216 @@
+{
+	"app": "OrcaCAD",
+	"source": "orcacad-native src/slic3r/GUI/DesignPanel.cpp (m_keys_sketch / m_keys_feature)",
+	"shortcuts": [
+		{
+			"id": "OrcaCAD.line",
+			"label": "Line",
+			"combo": "l"
+		},
+		{
+			"id": "OrcaCAD.rectangle",
+			"label": "Rectangle",
+			"combo": "r"
+		},
+		{
+			"id": "OrcaCAD.circle",
+			"label": "Circle",
+			"combo": "c"
+		},
+		{
+			"id": "OrcaCAD.arc",
+			"label": "Arc",
+			"combo": "a"
+		},
+		{
+			"id": "OrcaCAD.slot",
+			"label": "Slot",
+			"combo": "s"
+		},
+		{
+			"id": "OrcaCAD.ellipse",
+			"label": "Ellipse",
+			"combo": "e"
+		},
+		{
+			"id": "OrcaCAD.spline",
+			"label": "Spline",
+			"combo": "b"
+		},
+		{
+			"id": "OrcaCAD.point",
+			"label": "Point",
+			"combo": "p"
+		},
+		{
+			"id": "OrcaCAD.polygon",
+			"label": "Polygon",
+			"combo": "g"
+		},
+		{
+			"id": "OrcaCAD.dimension",
+			"label": "Dimension",
+			"combo": "d"
+		},
+		{
+			"id": "OrcaCAD.trim",
+			"label": "Trim",
+			"combo": "t"
+		},
+		{
+			"id": "OrcaCAD.extend",
+			"label": "Extend",
+			"combo": "x"
+		},
+		{
+			"id": "OrcaCAD.offset",
+			"label": "Offset",
+			"combo": "o"
+		},
+		{
+			"id": "OrcaCAD.sketch_fillet",
+			"label": "Sketch fillet",
+			"combo": "f"
+		},
+		{
+			"id": "OrcaCAD.sketch_chamfer",
+			"label": "Sketch chamfer",
+			"combo": "h"
+		},
+		{
+			"id": "OrcaCAD.sketch_mirror",
+			"label": "Mirror",
+			"combo": "m"
+		},
+		{
+			"id": "OrcaCAD.constrain",
+			"label": "Constrain",
+			"combo": "k"
+		},
+		{
+			"id": "OrcaCAD.construction",
+			"label": "Construction",
+			"combo": "q"
+		},
+		{
+			"id": "OrcaCAD.sketch",
+			"label": "Sketch",
+			"combo": "shift+s"
+		},
+		{
+			"id": "OrcaCAD.extrude",
+			"label": "Extrude",
+			"combo": "shift+e"
+		},
+		{
+			"id": "OrcaCAD.revolve",
+			"label": "Revolve",
+			"combo": "shift+r"
+		},
+		{
+			"id": "OrcaCAD.sweep",
+			"label": "Sweep",
+			"combo": "shift+w"
+		},
+		{
+			"id": "OrcaCAD.loft",
+			"label": "Loft",
+			"combo": "shift+l"
+		},
+		{
+			"id": "OrcaCAD.pattern",
+			"label": "Pattern",
+			"combo": "shift+n"
+		},
+		{
+			"id": "OrcaCAD.boolean",
+			"label": "Boolean",
+			"combo": "shift+b"
+		},
+		{
+			"id": "OrcaCAD.cut",
+			"label": "Cut",
+			"combo": "shift+x"
+		},
+		{
+			"id": "OrcaCAD.dressup",
+			"label": "Fillet / chamfer",
+			"combo": "shift+f"
+		},
+		{
+			"id": "OrcaCAD.draft",
+			"label": "Draft",
+			"combo": "shift+d"
+		},
+		{
+			"id": "OrcaCAD.shell",
+			"label": "Shell",
+			"combo": "shift+k"
+		},
+		{
+			"id": "OrcaCAD.hole",
+			"label": "Hole",
+			"combo": "shift+h"
+		},
+		{
+			"id": "OrcaCAD.thread",
+			"label": "Thread",
+			"combo": "shift+t"
+		},
+		{
+			"id": "OrcaCAD.plane",
+			"label": "Plane",
+			"combo": "shift+p"
+		},
+		{
+			"id": "OrcaCAD.axis",
+			"label": "Axis",
+			"combo": "shift+a"
+		},
+		{
+			"id": "OrcaCAD.coord_sys",
+			"label": "Coord system",
+			"combo": "shift+c"
+		},
+		{
+			"id": "OrcaCAD.thicken",
+			"label": "Thicken",
+			"combo": "shift+v"
+		},
+		{
+			"id": "OrcaCAD.surface_extrude",
+			"label": "Surface extrude",
+			"combo": "shift+g"
+		},
+		{
+			"id": "OrcaCAD.surface_revolve",
+			"label": "Surface revolve",
+			"combo": "shift+j"
+		},
+		{
+			"id": "OrcaCAD.surface_loft",
+			"label": "Surface loft",
+			"combo": "shift+o"
+		},
+		{
+			"id": "OrcaCAD.surface_fill",
+			"label": "Surface fill",
+			"combo": "shift+q"
+		},
+		{
+			"id": "OrcaCAD.surface_offset",
+			"label": "Surface offset",
+			"combo": "shift+u"
+		},
+		{
+			"id": "OrcaCAD.import_step",
+			"label": "Import STEP",
+			"combo": "shift+i"
+		},
+		{
+			"id": "OrcaCAD.import_mesh",
+			"label": "Import mesh",
+			"combo": "shift+m"
+		}
+	]
+}

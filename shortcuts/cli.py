@@ -224,7 +224,16 @@ def _push_live(identity: str) -> int:
     data = opendeck.load_profile(device, profile)
     # A page is the same application with a "#N" suffix, and no provider knows that suffix:
     # ask about the identity itself, or pages 2+ resolve to the bare app and match nothing.
-    by_tokens = {sc.tokens: sc for sc in resolve(identity.split("#", 1)[0])}
+    base = identity.split("#", 1)[0]
+    # Two catalogues can answer for one identity -- Orca CAD is OrcaSlicer plus a CAD
+    # workbench, so both its CAD tools and the slicer's own shortcuts resolve -- and a
+    # keystroke belongs to whichever is more specific: "p" is Point in the CAD sketch and
+    # the SLA-support gizmo in the slicer. Prefer the catalogue named after the identity.
+    by_tokens: dict[str, object] = {}
+    for sc in resolve(base):
+        previous = by_tokens.get(sc.tokens)
+        if previous is None or (sc.app == base and previous.app != base):
+            by_tokens[sc.tokens] = sc
 
     pushed = missing = unmatched = 0
     for position, key in enumerate(data.get("keys") or []):
