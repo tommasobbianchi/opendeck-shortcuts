@@ -29,7 +29,8 @@ class AutofillTestCase(unittest.TestCase):
         data = self._profile("chrome")
         self.assertEqual(sorted(data), ["infobars", "keys", "sliders"])
         filled = [i for i, k in enumerate(data["keys"]) if k]
-        self.assertEqual(filled, [3, 4, 5], "the strip's three slots are left alone")
+        self.assertEqual(filled, [0, 1, 3, 4, 5],
+                         "shortcuts from key 3; the strip carries the two mode buttons")
         apps = json.loads((__import__("pathlib").Path(self.tmp) / "applications.json").read_text())
         self.assertEqual(apps["chrome"]["n1-test"], "chrome")
 
@@ -43,14 +44,35 @@ class AutofillTestCase(unittest.TestCase):
         cli.main(["autofill", "chrome", "--limit", "4", "--bank", "2"])
         first = self._profile("chrome")
         second = self._profile("chrome_2")
-        labels = lambda d: [k["action"]["tooltip"] for k in d["keys"] if k]
-        self.assertEqual(len(labels(first)), 4)
-        self.assertEqual(len(labels(second)), 4)
-        self.assertFalse(set(labels(first)) & set(labels(second)), "no shortcut on two pages")
+        shortcuts = lambda d: [k["action"]["tooltip"] for i, k in enumerate(d["keys"])
+                               if k and i >= 3]
+        self.assertEqual(len(shortcuts(first)), 4)
+        self.assertEqual(len(shortcuts(second)), 4)
+        self.assertFalse(set(shortcuts(first)) & set(shortcuts(second)), "no shortcut on two pages")
 
         apps = json.loads((__import__("pathlib").Path(self.tmp) / "applications.json").read_text())
         self.assertEqual(apps["chrome"]["n1-test"], "chrome")
         self.assertEqual(apps["chrome#2"]["n1-test"], "chrome_2")
+
+    def test_every_page_can_be_escaped(self):
+        # Being taken to a profile by focus and having no way back to the launcher is the
+        # worst failure this tool can produce: the deck looks broken and nothing says why.
+        cli.main(["autofill", "chrome", "--limit", "3"])
+        keys = self._profile("chrome")["keys"]
+        self.assertIn("mode launcher", keys[0]["settings"]["down"])
+        self.assertIn("mode contextual", keys[1]["settings"]["down"])
+        self.assertEqual(keys[0]["states"][0]["text"], "Launcher")
+
+    def test_a_strip_key_someone_set_by_hand_is_left_alone(self):
+        cli.main(["autofill", "chrome", "--limit", "3"])
+        import pathlib
+        path = pathlib.Path(self.tmp) / "profiles" / "n1-test" / "chrome.json"
+        data = json.loads(path.read_text())
+        data["keys"][0]["settings"]["down"] = "something the user chose"
+        path.write_text(json.dumps(data))
+        cli.main(["autofill", "chrome", "--limit", "3"])
+        self.assertEqual(self._profile("chrome")["keys"][0]["settings"]["down"],
+                         "something the user chose")
 
     def test_every_page_carries_the_dial(self):
         cli.main(["autofill", "chrome", "--limit", "4"])

@@ -58,19 +58,36 @@ def page_name(label: str) -> str | None:
     return re.sub(r"[^a-z0-9]+", "", key) or None
 
 
+def direct_url(label: str) -> str | None:
+    """Some icons sit at a guessable path: `extrudetooliconLG.png`, `planetooliconLG.png`.
+
+    Most do not -- `fillettooliconLG.png` is a 404 while the fillet page names
+    `filletfeaturetoolicon.png` -- so this is a fallback, tried when the page itself says
+    nothing, not a rule.
+    """
+    stem = re.sub(r"[^a-z0-9]+", "", label.strip().lower())
+    if not stem:
+        return None
+    for suffix in ("tooliconLG", "toolicon", "featuretoolicon", "featuretooliconLG"):
+        url = f"{HELP_BASE}Resources/Images/icons/{stem}{suffix}.png"
+        if _get(url, timeout=15) is not None:
+            return url
+    return None
+
+
 def icon_url(label: str) -> str | None:
     """Find the toolbar icon a tool's own help page shows."""
     page = page_name(label)
     if page is None:
-        return None
+        return direct_url(label)
     html = _get(HELP_BASE + f"{page}.htm")
     if html is None:
-        return None
+        return direct_url(label)
     text = html.decode("utf-8", "replace")
     # The page shows its tool icon as ...Resources/Images/icons/<something>toolicon[LG].png
     found = re.findall(r'src="([^"]*Resources/Images/icons/[^"]*toolicon[^"]*\.png)"', text, re.I)
     if not found:
-        return None
+        return direct_url(label)
     # Prefer the large one: it is the same drawing with more pixels to rescale from.
     found.sort(key=lambda s: ("LG.png" not in s, len(s)))
     return parse.urljoin(HELP_BASE + f"{page}.htm", found[0])

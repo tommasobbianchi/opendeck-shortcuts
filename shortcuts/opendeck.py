@@ -264,6 +264,48 @@ def dial_key(command: str = PAGE_COMMAND, label: str = "Page") -> dict:
     }
 
 
+#: The two screenless buttons on the N1's strip, and what they are for. Grid 0 and 1; grid 2 is
+#: the screen the knob sits under and has no button behind it.
+MODE_KEYS = {0: ("launcher", "Launcher"), 1: ("contextual", "Auto")}
+
+
+def mode_key(position: int, mode: str, label: str) -> dict:
+    """A strip button that puts the deck back in launcher or contextual mode.
+
+    Every profile needs these. A page that fills only the fifteen LCD keys leaves the strip
+    dead, and the strip is the way *out*: without it a per-application profile is a room with
+    no door -- you can be taken there by focus and have no way to reach the launcher again.
+    """
+    home = str(Path.home())
+    return {
+        "action": {
+            "controllers": ["Keypad", "Encoder"],
+            "disable_automatic_states": False,
+            "encoder": None,
+            "icon": "",
+            "name": "Run Command",
+            "plugin": _STARTERPACK,
+            "property_inspector": f"plugins/{_STARTERPACK}/propertyInspector/runCommand.html",
+            "states": [_state("")],
+            "supported_in_multi_actions": True,
+            "tooltip": label,
+            "uuid": _RUN_COMMAND_UUID,
+            "visible_in_action_list": True,
+        },
+        "children": None,
+        "context": f"Keypad.{position}.0",
+        "current_state": 0,
+        "settings": {
+            "down": f"{home}/.local/bin/opendeck-focus mode {mode}",
+            "up": "",
+            "file": "",
+            "show": False,
+            "rotate": "",
+        },
+        "states": [_state("", label)],
+    }
+
+
 def applications() -> dict:
     """Read ``<config>/applications.json``; ``{}`` when absent or unreadable."""
     path = _config_dir() / "applications.json"

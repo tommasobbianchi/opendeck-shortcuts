@@ -142,6 +142,11 @@ def _autofill_main(argv: list[str]) -> int:
         position = opendeck.FIRST_KEY + offset
         keys[position] = opendeck.input_key(
             position, sc.label, sc.tokens, results[sc.id].data_uri)
+    # The strip is the way out of a page: without it a per-application profile is a room with
+    # no door. Only fill a strip key that is empty, so a deliberate one is never overwritten.
+    for position, (mode, label) in opendeck.MODE_KEYS.items():
+        if not keys[position]:
+            keys[position] = opendeck.mode_key(position, mode, label)
     data["keys"] = keys
     # Every page carries the dial, or you can turn onto a page you cannot turn off.
     data["sliders"] = [opendeck.dial_key()]
