@@ -112,6 +112,25 @@ class PublishTestCase(unittest.TestCase):
             self.assertFalse(store.publish(_shortcut(), PNG, "generated"))
 
 
+class AppArtTestCase(unittest.TestCase):
+    """An application's own icons: used locally, never published."""
+
+    def test_fetched_app_art_wins_over_the_cache_and_is_not_publishable(self):
+        sc = _shortcut(app="onshape", sid="onshape.extrude")
+        path = icons.app_art_path(sc)
+        self.assertTrue(str(path).endswith("onshape/extrude.png"), path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(PNG)
+        with mock.patch.object(icons, "rasterise", return_value=PNG):
+            result = icons.resolve(sc)
+        self.assertEqual(result.origin, "app")
+        self.assertFalse(store.publish(sc, PNG, result.origin),
+                         "an application's own art is not ours to redistribute")
+
+    def test_it_is_kept_somewhere_other_than_the_cache(self):
+        self.assertNotEqual(icons.app_art_dir(), icons.cache_dir())
+
+
 class ResolutionOrderTestCase(unittest.TestCase):
     def setUp(self):
         import os

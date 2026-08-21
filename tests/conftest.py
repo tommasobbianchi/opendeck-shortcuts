@@ -16,6 +16,7 @@ import pytest
 def _hermetic_icons(tmp_path, monkeypatch):
     monkeypatch.setenv("OPENDECK_ICON_STORE", "0")
     monkeypatch.setenv("OPENDECK_ICON_CACHE", str(tmp_path / "icons"))
+    monkeypatch.setenv("OPENDECK_APP_ART", str(tmp_path / "app-art"))
     yield
 
 

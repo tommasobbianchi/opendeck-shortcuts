@@ -51,6 +51,31 @@ class IconResult:
     origin: str  # "app" | "cache" | "store" | "generated" | "none"
 
 
+def app_art_dir() -> Path:
+    """Where an application's own icons live once fetched.
+
+    Kept apart from the cache on purpose. Everything in the cache is ours to share; nothing
+    here is. Onshape's toolbar icons are Onshape's, and the deck uses them for the same reason
+    the toolbar does -- so the button looks like the button -- which is exactly the use that
+    does not extend to redistributing them from a public repository.
+    """
+    override = os.environ.get("OPENDECK_APP_ART")
+    if override:
+        return Path(override).expanduser()
+    root = os.environ.get("XDG_DATA_HOME")
+    base = Path(root).expanduser() if root else Path.home() / ".local" / "share"
+    return base / "opendeck-shortcuts" / "app-art"
+
+
+def app_art_path(shortcut) -> Path:
+    """``<app-art>/<app>/<action>.png`` -- readable, so a wrong icon can be found and replaced."""
+    safe = lambda part: "".join(c if c.isalnum() or c in "-._" else "_" for c in part)[:64]
+    action = shortcut.id
+    if action.startswith(f"{shortcut.app}."):
+        action = action[len(shortcut.app) + 1:]
+    return app_art_dir() / safe(shortcut.app) / f"{safe(action)}.png"
+
+
 def cache_key(shortcut) -> str:
     """sha256 of ``<app>\0<id>``, first 16 hex chars."""
     return hashlib.sha256(f"{shortcut.app}\0{shortcut.id}".encode("utf-8")).hexdigest()[:16]
@@ -246,6 +271,13 @@ def resolve(shortcut, generate_missing: bool = False, publish: bool = False) -> 
     """Resolve one icon. ``publish`` offers a freshly generated one to the shared store."""
     if shortcut.icon:
         png = rasterise(shortcut.icon)
+        if png is not None:
+            return IconResult(to_data_uri(png), "app")
+    # Art fetched from the application's own documentation: the toolbar icon for this action.
+    # It counts as app art, so it is never offered to the shared store.
+    fetched = app_art_path(shortcut)
+    if fetched.is_file():
+        png = rasterise(fetched)
         if png is not None:
             return IconResult(to_data_uri(png), "app")
     cache_file = cache_dir() / f"{cache_key(shortcut)}.png"
