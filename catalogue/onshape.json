@@ -1,26 +1,37 @@
 {
   "app": "onshape",
-  "source": "https://cad.onshape.com/help/Content/shortcut_keys.htm",
+  "source": "https://cad.onshape.com/help/Content/shortcut_keys.htm (Part Studio + Sketch sections)",
   "shortcuts": [
     {"id": "onshape.sketch", "label": "Sketch", "combo": "shift+s"},
     {"id": "onshape.extrude", "label": "Extrude", "combo": "shift+e"},
     {"id": "onshape.revolve", "label": "Revolve", "combo": "shift+w"},
     {"id": "onshape.fillet", "label": "Fillet", "combo": "shift+f"},
+    {"id": "onshape.hide_sketches", "label": "Show/hide sketches", "combo": "shift+h"},
+
     {"id": "onshape.line", "label": "Line", "combo": "l"},
     {"id": "onshape.circle", "label": "Circle", "combo": "c"},
-    {"id": "onshape.rectangle", "label": "Rectangle", "combo": "r"},
+    {"id": "onshape.center_rectangle", "label": "Centre rectangle", "combo": "r"},
+    {"id": "onshape.corner_rectangle", "label": "Corner rectangle", "combo": "g"},
+    {"id": "onshape.arc", "label": "3 point arc", "combo": "a"},
     {"id": "onshape.dimension", "label": "Dimension", "combo": "d"},
+    {"id": "onshape.trim", "label": "Trim", "combo": "m"},
+    {"id": "onshape.offset", "label": "Offset", "combo": "o"},
+    {"id": "onshape.use", "label": "Use / project", "combo": "u"},
     {"id": "onshape.construction", "label": "Construction", "combo": "q"},
+
+    {"id": "onshape.tangent", "label": "Tangent", "combo": "t"},
+    {"id": "onshape.parallel", "label": "Parallel", "combo": "b"},
+    {"id": "onshape.perpendicular", "label": "Perpendicular", "combo": "shift+l"},
+    {"id": "onshape.coincident", "label": "Coincident", "combo": "i"},
+    {"id": "onshape.equal", "label": "Equal", "combo": "e"},
+    {"id": "onshape.horizontal", "label": "Horizontal", "combo": "h"},
+    {"id": "onshape.vertical", "label": "Vertical", "combo": "v"},
+    {"id": "onshape.symmetric", "label": "Symmetric", "combo": "shift+q"},
+    {"id": "onshape.sketch_point", "label": "Sketch point", "combo": "shift+s"},
     {"id": "onshape.isometric", "label": "Isometric view", "combo": "shift+7"},
     {"id": "onshape.front_view", "label": "Front view", "combo": "shift+1"},
-    {"id": "onshape.right_view", "label": "Right view", "combo": "shift+4"},
-    {"id": "onshape.hide_sketches", "label": "Show/hide sketches", "combo": "shift+h"},
-    {"id": "onshape.planes", "label": "Show/hide planes", "combo": "p"},
-    {"id": "onshape.mate_connectors", "label": "Mate connectors", "combo": "k"},
     {"id": "onshape.measure", "label": "Measure", "combo": "["},
-    {"id": "onshape.commit", "label": "Commit command", "combo": "return"},
-    {"id": "onshape.exit", "label": "Exit command", "combo": "escape"},
-    {"id": "onshape.redo", "label": "Redo", "combo": "ctrl+y"},
-    {"id": "onshape.transparent", "label": "Make transparent", "combo": "shift+t"}
+    {"id": "onshape.mate_connectors", "label": "Mate connectors", "combo": "k"},
+    {"id": "onshape.exit", "label": "Exit command", "combo": "escape"}
   ]
 }
