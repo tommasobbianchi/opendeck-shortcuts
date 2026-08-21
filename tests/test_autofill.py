@@ -81,6 +81,15 @@ class AutofillTestCase(unittest.TestCase):
         self.assertIn("page next", slot["settings"]["rotate"])
         self.assertEqual(slot["settings"]["down"], "", "a turn pages; a press does not")
 
+    def test_ids_choose_the_keys_and_their_order(self):
+        cli.main(["autofill", "chrome", "--ids", "chrome.close_tab,chrome.new_tab"])
+        keys = [k for i, k in enumerate(self._profile("chrome")["keys"]) if k and i >= 3]
+        self.assertEqual([k["action"]["tooltip"] for k in keys], ["Close tab", "New tab"])
+
+    def test_an_id_that_does_not_exist_is_refused_rather_than_skipped(self):
+        code = cli.main(["autofill", "chrome", "--ids", "chrome.new_tab,chrome.nonsense"])
+        self.assertEqual(code, 1)
+
     def test_a_page_past_the_end_is_refused_rather_than_written_empty(self):
         code = cli.main(["autofill", "chrome", "--limit", "15", "--bank", "3"])
         self.assertEqual(code, 1)

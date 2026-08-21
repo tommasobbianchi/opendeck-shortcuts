@@ -93,6 +93,8 @@ def _autofill_main(argv: list[str]) -> int:
     parser.add_argument("identity", help="the WM_CLASS the focus daemon publishes, e.g. 'google-chrome'")
     parser.add_argument("--device", default=None, help="device id (default: the only one)")
     parser.add_argument("--limit", type=int, default=15, help="keys to fill (default 15, the deck's count)")
+    parser.add_argument("--ids", help="comma-separated shortcut ids, in the order they take keys; "
+                                      "overrides --bank's slice of the catalogue")
     parser.add_argument("--bank", type=int, default=1,
                         help="which page of keys (1 is the plain identity, 2+ publish <identity>#N)")
     parser.add_argument("--generate", action="store_true", help="draw missing icons (costs money)")
@@ -113,9 +115,22 @@ def _autofill_main(argv: list[str]) -> int:
     slots = min(args.limit, opendeck.LAST_KEY - opendeck.FIRST_KEY + 1)
     if args.bank < 1:
         parser.error("--bank counts from 1")
-    # Page 2 carries the shortcuts page 1 had no room for, and so on.
-    start = (args.bank - 1) * slots
-    chosen = records[start:start + slots]
+    if args.ids:
+        # An explicit page: the keys are chosen, not sliced. A page of solid features is not a
+        # contiguous run of any catalogue, and reordering the file to fake one would break the
+        # other pages.
+        by_id = {sc.id: sc for sc in records}
+        wanted = [i.strip() for i in args.ids.split(",") if i.strip()]
+        missing = [i for i in wanted if i not in by_id]
+        if missing:
+            print(f"error: not in {args.identity}: {', '.join(missing)}", file=sys.stderr)
+            return 1
+        chosen = [by_id[i] for i in wanted][:slots]
+        start = 0
+    else:
+        # Page 2 carries the shortcuts page 1 had no room for, and so on.
+        start = (args.bank - 1) * slots
+        chosen = records[start:start + slots]
     if not chosen:
         print(f"error: {args.identity} has {len(records)} shortcut(s); page {args.bank} would be empty",
               file=sys.stderr)
