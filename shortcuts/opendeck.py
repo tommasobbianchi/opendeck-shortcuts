@@ -160,7 +160,14 @@ def _absolute_image(icon: str | None) -> str:
     return os.path.abspath(os.path.expanduser(icon))
 
 
-def _state(image: str, text: str = "") -> dict:
+def _state(image: str, text: str = "", name: str = "") -> dict:
+    """One OpenDeck key state.
+
+    ``name`` is the manifest's per-state Name. Nothing on the device reads it, which is exactly
+    why it is the right place to record what a key is for: the caption OpenDeck writes under
+    the key in its editor comes from here, so a grid of pictures can be read by someone who
+    does not already know what every picture means, without a word of it reaching the glass.
+    """
     return {
         "alignment": "middle",
         "background_colour": "#000000",
@@ -168,7 +175,7 @@ def _state(image: str, text: str = "") -> dict:
         "family": "Liberation Sans",
         "image": image,
         "image_scale": 100,
-        "name": "",
+        "name": name,
         "show": True,
         "size": 16,
         "stroke_colour": "#000000",
@@ -214,7 +221,7 @@ def input_key(position: int, label: str, ron: str, icon: str | None) -> dict:
         "context": f"Keypad.{position}.0",
         "current_state": 0,
         "settings": {"down": ron, "up": "", "anticlockwise": "", "clockwise": ""},
-        "states": [_state(image, caption)],
+        "states": [_state(image, caption, label)],
     }
 
 
@@ -260,7 +267,7 @@ def dial_key(command: str = PAGE_COMMAND, label: str = "Page") -> dict:
             "show": False,
             "rotate": command.replace("%h", home),
         },
-        "states": [_state("", label)],
+        "states": [_state("", label, label)],
     }
 
 
@@ -302,7 +309,7 @@ def mode_key(position: int, mode: str, label: str) -> dict:
             "show": False,
             "rotate": "",
         },
-        "states": [_state("", label)],
+        "states": [_state("", label, label)],
     }
 
 
