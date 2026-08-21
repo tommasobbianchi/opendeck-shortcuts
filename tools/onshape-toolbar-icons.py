@@ -13,6 +13,10 @@ sign on the key marked Perpendicular and nothing complains.
 
 Output goes to the app-art directory, not the icon cache: these are Onshape's drawings, used
 for Onshape's own tools, and never uploaded anywhere.
+
+The capture itself is not in this repository for the same reason -- a screenshot of Onshape's
+toolbar is Onshape's art, and this repository is public. Keep yours outside the tree and pass
+its path; `~/Schermate/` is where they land on this fleet.
 """
 
 import argparse
