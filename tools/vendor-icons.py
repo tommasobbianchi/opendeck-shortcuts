@@ -70,8 +70,12 @@ ONSHAPE_ICONS = {
     "isolate": "svg-icon-isolate-button",
     "derived": "svg-icon-import-derived-button",
     "hide_sketches": "svg-icon-eye_closed",
-    "exit": "svg-icon-cancel-button",
+    "exit": "svg-icon-close-x",
     "named_view": "svg-icon-named-view-button",
+    # No toolbar button turns the view; Onshape does it with the view cube widget. These are the
+    # nearest art Onshape itself draws, and being its own they keep the page to one hand.
+    "isometric": "svg-icon-view-cube-button",
+    "front_view": "svg-icon-named-view-button",
     # sketch entities
     "line": "svg-icon-sketch-line-segment-button",
     "circle": "svg-icon-sketch-circle-button",
@@ -312,6 +316,14 @@ MATERIAL_ICONS = {
     },
     # Only what OrcaSlicer ships no art of; everything else on that page is Orca's own SVG.
     "orca": {
+        # The six below were OrcaSlicer's own SVGs. Orca's line art is a third of the weight of
+        # the family around it, so a page carrying both read as two sets; one page, one weight.
+        "open_project": "folder_open",
+        "save_project": "save",
+        "save_project_as": "save_as",
+        "cut": "content_cut",
+        "copy_to_clipboard": "content_copy",
+        "paste_from_clipboard": "content_paste",
         "new_project": "note_add",
         "import_geometry_data_from_stl_step_3mf_obj_amf_files": "file_open",
         "export_plate_sliced_file": "download",
@@ -321,11 +333,6 @@ MATERIAL_ICONS = {
         "show_hide_3dconnexion_devices_settings_dialog": "mouse",
         "switch_table_page": "swap_horiz",
         "delete_selected": "delete",
-    },
-    # Onshape draws these two with the view cube, not with a toolbar icon.
-    "onshape": {
-        "isometric": "deployed_code",
-        "front_view": "crop_square",
     },
 }
 
