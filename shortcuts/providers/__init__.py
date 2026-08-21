@@ -47,7 +47,16 @@ def resolve(identity: str, build_missing: bool = False) -> list[Shortcut]:
                 if not provider.matches(segment):
                     continue
                 for sc in provider.shortcuts(segment):
-                    key = (sc.app, sc.combo)
+                    # An application can give one keystroke two meanings in two modes that are
+                    # never live at once: Orca CAD's "p" is Point while a sketch is open and
+                    # Show/hide planes when none is. Collapsing those loses one of them.
+                    #
+                    # The label, not the category, is what separates them. Orca's own list
+                    # repeats a combo across its sections for the SAME action -- Ctrl+X is Cut
+                    # in both Plater and Object list -- and those should still collapse to one
+                    # key. Same keystroke, same name: one shortcut. Same keystroke, different
+                    # name: two, because they do different things.
+                    key = (sc.app, sc.combo, sc.label)
                     current = by_key.get(key)
                     if current is None or _PROVENANCE_RANK[sc.provenance] > _PROVENANCE_RANK[current.provenance]:
                         by_key[key] = sc

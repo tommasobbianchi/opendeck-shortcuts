@@ -244,6 +244,8 @@ ORCACAD_ICONS = {
     "surface_offset": "design_offset",
     "import_step": "design_step",
     "import_mesh": "param_triangles",
+    # A visibility toggle, not the Plane feature -- the eye says which it is.
+    "show_planes": "design_eye",
 }
 
 ORCACAD_TREES = (
@@ -720,18 +722,20 @@ def cmd_audit(args: argparse.Namespace) -> int:
         except Exception:
             continue
         base = identity.split("#", 1)[0]
-        # Most specific catalogue wins a shared keystroke -- see cli._push_live.
-        by_tokens = {}
+        # A shared keystroke is disambiguated by what the key says it is -- see cli._push_live.
+        candidates: dict[str, list] = {}
         for sc in resolve_shortcuts(base):
-            previous = by_tokens.get(sc.tokens)
-            if previous is None or (sc.app == base and previous.app != base):
-                by_tokens[sc.tokens] = sc
+            candidates.setdefault(sc.tokens, []).append(sc)
         counts: dict[str, int] = {}
         strays = []
         for key in data.get("keys") or []:
             if not key:
                 continue
-            sc = by_tokens.get((key.get("settings") or {}).get("down") or "")
+            options = candidates.get((key.get("settings") or {}).get("down") or "") or []
+            wanted = ((key.get("states") or [{}])[0].get("name")
+                      or (key.get("action") or {}).get("tooltip") or "")
+            sc = next((o for o in options if o.label == wanted),
+                      next((o for o in options if o.app == base), options[0] if options else None))
             if sc is None:
                 counts["not a shortcut"] = counts.get("not a shortcut", 0) + 1
                 continue

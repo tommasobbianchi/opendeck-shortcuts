@@ -5,213 +5,261 @@
 		{
 			"id": "OrcaSlicer.line",
 			"label": "Line",
-			"combo": "l"
+			"combo": "l",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.rectangle",
 			"label": "Rectangle",
-			"combo": "r"
+			"combo": "r",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.circle",
 			"label": "Circle",
-			"combo": "c"
+			"combo": "c",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.arc",
 			"label": "Arc",
-			"combo": "a"
+			"combo": "a",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.slot",
 			"label": "Slot",
-			"combo": "s"
+			"combo": "s",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.ellipse",
 			"label": "Ellipse",
-			"combo": "e"
+			"combo": "e",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.spline",
 			"label": "Spline",
-			"combo": "b"
+			"combo": "b",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.point",
 			"label": "Point",
-			"combo": "p"
+			"combo": "p",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.polygon",
 			"label": "Polygon",
-			"combo": "g"
+			"combo": "g",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.dimension",
 			"label": "Dimension",
-			"combo": "d"
+			"combo": "d",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.trim",
 			"label": "Trim",
-			"combo": "t"
+			"combo": "t",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.extend",
 			"label": "Extend",
-			"combo": "x"
+			"combo": "x",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.offset",
 			"label": "Offset",
-			"combo": "o"
+			"combo": "o",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.sketch_fillet",
 			"label": "Sketch fillet",
-			"combo": "f"
+			"combo": "f",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.sketch_chamfer",
 			"label": "Sketch chamfer",
-			"combo": "h"
+			"combo": "h",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.sketch_mirror",
 			"label": "Mirror",
-			"combo": "m"
+			"combo": "m",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.constrain",
 			"label": "Constrain",
-			"combo": "k"
+			"combo": "k",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.construction",
 			"label": "Construction",
-			"combo": "q"
+			"combo": "q",
+			"category": "sketch"
 		},
 		{
 			"id": "OrcaSlicer.sketch",
 			"label": "Sketch",
-			"combo": "shift+s"
+			"combo": "shift+s",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.extrude",
 			"label": "Extrude",
-			"combo": "shift+e"
+			"combo": "shift+e",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.revolve",
 			"label": "Revolve",
-			"combo": "shift+r"
+			"combo": "shift+r",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.sweep",
 			"label": "Sweep",
-			"combo": "shift+w"
+			"combo": "shift+w",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.loft",
 			"label": "Loft",
-			"combo": "shift+l"
+			"combo": "shift+l",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.pattern",
 			"label": "Pattern",
-			"combo": "shift+n"
+			"combo": "shift+n",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.boolean",
 			"label": "Boolean",
-			"combo": "shift+b"
+			"combo": "shift+b",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.cut",
 			"label": "Cut",
-			"combo": "shift+x"
+			"combo": "shift+x",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.dressup",
 			"label": "Fillet / chamfer",
-			"combo": "shift+f"
+			"combo": "shift+f",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.draft",
 			"label": "Draft",
-			"combo": "shift+d"
+			"combo": "shift+d",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.shell",
 			"label": "Shell",
-			"combo": "shift+k"
+			"combo": "shift+k",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.hole",
 			"label": "Hole",
-			"combo": "shift+h"
+			"combo": "shift+h",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.thread",
 			"label": "Thread",
-			"combo": "shift+t"
+			"combo": "shift+t",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.plane",
 			"label": "Plane",
-			"combo": "shift+p"
+			"combo": "shift+p",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.axis",
 			"label": "Axis",
-			"combo": "shift+a"
+			"combo": "shift+a",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.coord_sys",
 			"label": "Coord system",
-			"combo": "shift+c"
+			"combo": "shift+c",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.thicken",
 			"label": "Thicken",
-			"combo": "shift+v"
+			"combo": "shift+v",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.surface_extrude",
 			"label": "Surface extrude",
-			"combo": "shift+g"
+			"combo": "shift+g",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.surface_revolve",
 			"label": "Surface revolve",
-			"combo": "shift+j"
+			"combo": "shift+j",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.surface_loft",
 			"label": "Surface loft",
-			"combo": "shift+o"
+			"combo": "shift+o",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.surface_fill",
 			"label": "Surface fill",
-			"combo": "shift+q"
+			"combo": "shift+q",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.surface_offset",
 			"label": "Surface offset",
-			"combo": "shift+u"
+			"combo": "shift+u",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.import_step",
 			"label": "Import STEP",
-			"combo": "shift+i"
+			"combo": "shift+i",
+			"category": "feature"
 		},
 		{
 			"id": "OrcaSlicer.import_mesh",
 			"label": "Import mesh",
-			"combo": "shift+m"
+			"combo": "shift+m",
+			"category": "feature"
+		},
+		{
+			"id": "OrcaSlicer.show_planes",
+			"label": "Show/hide planes",
+			"combo": "p",
+			"category": "feature"
 		}
 	],
-	"note": "Orca CAD is the Design view of OrcaSlicer, not a separate application: same process, same window, same WM_CLASS. Its tools are dial pages of the OrcaSlicer profile. Sketch tools are single letters and only live while a sketch is open; feature tools are shift+letter."
+	"note": "Orca CAD is the Design view of OrcaSlicer, not a separate application: same process, same window, same WM_CLASS. Its tools are dial pages of the OrcaSlicer profile. Sketch tools are single letters and only live while a sketch is open; feature tools are shift+letter. The category is the key table the tool lives in: a sketch-mode letter and a feature-mode letter can be the same letter and mean different things."
 }

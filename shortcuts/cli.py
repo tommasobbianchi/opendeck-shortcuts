@@ -225,21 +225,34 @@ def _push_live(identity: str) -> int:
     # A page is the same application with a "#N" suffix, and no provider knows that suffix:
     # ask about the identity itself, or pages 2+ resolve to the bare app and match nothing.
     base = identity.split("#", 1)[0]
-    # Two catalogues can answer for one identity -- Orca CAD is OrcaSlicer plus a CAD
-    # workbench, so both its CAD tools and the slicer's own shortcuts resolve -- and a
-    # keystroke belongs to whichever is more specific: "p" is Point in the CAD sketch and
-    # the SLA-support gizmo in the slicer. Prefer the catalogue named after the identity.
-    by_tokens: dict[str, object] = {}
+    # One keystroke can belong to more than one shortcut. Orca CAD is OrcaSlicer plus a CAD
+    # workbench, so both catalogues answer and "p" is the SLA-support gizmo in the slicer;
+    # inside the workbench the same "p" is Point while a sketch is open and Show/hide planes
+    # when none is. Which one a KEY means is not a property of the keystroke, so ask the key:
+    # the profile records what it is for in the state's name.
+    candidates: dict[str, list] = {}
     for sc in resolve(base):
-        previous = by_tokens.get(sc.tokens)
-        if previous is None or (sc.app == base and previous.app != base):
-            by_tokens[sc.tokens] = sc
+        candidates.setdefault(sc.tokens, []).append(sc)
+
+    def pick(tokens: str, key: dict):
+        options = candidates.get(tokens) or []
+        if len(options) <= 1:
+            return options[0] if options else None
+        wanted = ((key.get("states") or [{}])[0].get("name")
+                  or (key.get("action") or {}).get("tooltip") or "")
+        for sc in options:
+            if sc.label == wanted:
+                return sc
+        for sc in options:
+            if sc.app == base:
+                return sc
+        return options[0]
 
     pushed = missing = unmatched = 0
     for position, key in enumerate(data.get("keys") or []):
         if not key:
             continue
-        sc = by_tokens.get(((key.get("settings") or {}).get("down") or ""))
+        sc = pick((key.get("settings") or {}).get("down") or "", key)
         if sc is None:
             unmatched += 1
             continue

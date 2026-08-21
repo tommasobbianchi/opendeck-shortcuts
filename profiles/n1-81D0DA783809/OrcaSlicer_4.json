@@ -52,7 +52,7 @@
 					"background_colour": "#000000",
 					"colour": "#FFFFFF",
 					"family": "Liberation Sans",
-					"image": "",
+					"image": "0.png",
 					"image_scale": 100,
 					"name": "Launcher",
 					"show": true,
@@ -116,7 +116,7 @@
 					"background_colour": "#000000",
 					"colour": "#FFFFFF",
 					"family": "Liberation Sans",
-					"image": "",
+					"image": "0.png",
 					"image_scale": 100,
 					"name": "Auto",
 					"show": true,
@@ -161,12 +161,138 @@
 					}
 				],
 				"supported_in_multi_actions": true,
-				"tooltip": "Thread",
+				"tooltip": "Sketch",
 				"uuid": "com.amansprojects.starterpack.inputsimulation",
 				"visible_in_action_list": true
 			},
 			"children": null,
 			"context": "Keypad.3.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Shift, Press), Key(Unicode('s'), Click), Key(Shift, Release)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Sketch",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Show/hide planes",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.4.0",
+			"current_state": 0,
+			"settings": {
+				"anticlockwise": "",
+				"clockwise": "",
+				"down": "[Key(Unicode('p'), Click)]",
+				"up": ""
+			},
+			"states": [
+				{
+					"alignment": "middle",
+					"background_colour": "#000000",
+					"colour": "#FFFFFF",
+					"family": "Liberation Sans",
+					"image": "0.png",
+					"image_scale": 100,
+					"name": "Show/hide planes",
+					"show": true,
+					"size": 16,
+					"stroke_colour": "#000000",
+					"stroke_size": 3,
+					"style": "Regular",
+					"text": "",
+					"underline": false
+				}
+			]
+		},
+		{
+			"action": {
+				"controllers": [
+					"Keypad",
+					"Encoder"
+				],
+				"disable_automatic_states": false,
+				"encoder": null,
+				"icon": "",
+				"name": "Simulate Input",
+				"plugin": "com.amansprojects.starterpack.sdPlugin",
+				"property_inspector": "plugins/com.amansprojects.starterpack.sdPlugin/propertyInspector/inputSimulation.html",
+				"states": [
+					{
+						"alignment": "middle",
+						"background_colour": "#000000",
+						"colour": "#FFFFFF",
+						"family": "Liberation Sans",
+						"image": "",
+						"image_scale": 100,
+						"name": "",
+						"show": true,
+						"size": 16,
+						"stroke_colour": "#000000",
+						"stroke_size": 3,
+						"style": "Regular",
+						"text": "",
+						"underline": false
+					}
+				],
+				"supported_in_multi_actions": true,
+				"tooltip": "Thread",
+				"uuid": "com.amansprojects.starterpack.inputsimulation",
+				"visible_in_action_list": true
+			},
+			"children": null,
+			"context": "Keypad.5.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -229,7 +355,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.4.0",
+			"context": "Keypad.6.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -292,7 +418,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.5.0",
+			"context": "Keypad.7.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -355,7 +481,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.6.0",
+			"context": "Keypad.8.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -418,7 +544,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.7.0",
+			"context": "Keypad.9.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -481,7 +607,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.8.0",
+			"context": "Keypad.10.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -544,7 +670,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.9.0",
+			"context": "Keypad.11.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -607,7 +733,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.10.0",
+			"context": "Keypad.12.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -670,7 +796,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.11.0",
+			"context": "Keypad.13.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -733,7 +859,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.12.0",
+			"context": "Keypad.14.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -796,7 +922,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.13.0",
+			"context": "Keypad.15.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -859,7 +985,7 @@
 				"visible_in_action_list": true
 			},
 			"children": null,
-			"context": "Keypad.14.0",
+			"context": "Keypad.16.0",
 			"current_state": 0,
 			"settings": {
 				"anticlockwise": "",
@@ -886,8 +1012,6 @@
 				}
 			]
 		},
-		null,
-		null,
 		null
 	],
 	"sliders": [

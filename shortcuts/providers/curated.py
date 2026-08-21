@@ -71,6 +71,7 @@ def shortcuts(segment: str) -> list[Shortcut]:
                     combo=entry["combo"],
                     provenance="curated",
                     source=source,
+                    category=entry.get("category", ""),
                 )
             )
     return out
