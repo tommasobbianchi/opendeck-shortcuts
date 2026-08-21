@@ -1,0 +1,50 @@
+{
+	"OpenDeckLauncher": {
+		"n1-81D0DA783809": "Launcher"
+	},
+	"OrcaBelt2608": {
+		"n1-81D0DA783809": "OrcaBelt2608"
+	},
+	"OrcaSlicer": {
+		"n1-81D0DA783809": "OrcaSlicer"
+	},
+	"WhatsApp Desktop": {
+		"n1-81D0DA783809": "WhatsApp_Desktop"
+	},
+	"discord": {
+		"n1-81D0DA783809": "discord"
+	},
+	"google-chrome": {
+		"n1-81D0DA783809": "google-chrome"
+	},
+	"google-chrome:gmail": {
+		"n1-81D0DA783809": "google-chrome_gmail"
+	},
+	"google-chrome:onshape": {
+		"n1-81D0DA783809": "google-chrome_onshape"
+	},
+	"google-chrome:onshape#2": {
+		"n1-81D0DA783809": "google-chrome_onshape_2"
+	},
+	"google-chrome:onshape#3": {
+		"n1-81D0DA783809": "google-chrome_onshape_3"
+	},
+	"google-chrome:youtube": {
+		"n1-81D0DA783809": "google-chrome_youtube"
+	},
+	"kitty": {
+		"n1-81D0DA783809": "kitty"
+	},
+	"kitty:claude": {
+		"n1-81D0DA783809": "kitty_claude"
+	},
+	"opendeck_default": {
+		"n1-81D0DA783809": "Default"
+	},
+	"org.gnome.Nautilus": {
+		"n1-81D0DA783809": "org_gnome_Nautilus"
+	},
+	"telegram-desktop_telegram-desktop": {
+		"n1-81D0DA783809": "telegram-desktop_telegram-desktop"
+	}
+}
