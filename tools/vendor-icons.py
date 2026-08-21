@@ -217,6 +217,116 @@ MATERIAL_ICONS = {
         "snooze": "schedule",
         "mark_unread": "mark_email_unread",
     },
+    # Chrome's own icons are compiled into the browser, but Chrome is drawn in this very
+    # language, so the family holds. Directional pairs must be a pair: next is the mirror of
+    # previous, and pointing them the same way -- which is what the drawn glyphs did -- is the
+    # single worst thing an icon set can do.
+    # The identity is `google-chrome` while the catalogue ids are `chrome.*`; app art keeps
+    # whatever of the id the app name does not prefix, so these keys carry it.
+    "google-chrome": {
+        "chrome.new_tab": "add_box",
+        "chrome.close_tab": "tab_close",
+        "chrome.reopen_closed_tab": "restore_page",
+        "chrome.next_tab": "chevron_right",
+        "chrome.previous_tab": "chevron_left",
+        "chrome.address_bar": "web",
+        "chrome.find": "find_in_page",
+        "chrome.reload": "refresh",
+        "chrome.devtools": "code",
+        "chrome.incognito": "visibility_off",
+        "chrome.bookmark": "star",
+        "chrome.history": "history",
+        "chrome.downloads": "download",
+    },
+    "youtube": {
+        "play_pause": "play_pause",
+        "mute": "volume_off",
+        "fullscreen": "fullscreen",
+        "captions": "closed_caption",
+        "back_10": "replay_10",
+        "forward_10": "forward_10",
+        "next_video": "skip_next",
+        "previous_video": "skip_previous",
+        # A pair must look like a pair, and these two shortcuts are literally ">" and "<".
+        "faster": "keyboard_double_arrow_right",
+        "slower": "keyboard_double_arrow_left",
+        "next_frame": "arrow_forward_ios",
+        "previous_frame": "arrow_back_ios",
+        "search": "search",
+        "restart": "replay",
+        "next_chapter": "playlist_play",
+    },
+    "kitty": {
+        "copy_to_clipboard": "content_copy",
+        "paste_from_clipboard": "content_paste",
+        "paste_from_clipboard.ctrl+v": "content_paste_go",
+        "new_os_window": "open_in_new",
+        "next_layout": "view_quilt",
+        "change_font_size": "text_increase",
+        "change_font_size.ctrl+shift+-": "text_decrease",
+        "change_font_size.ctrl+shift+backspace": "format_size",
+        "copy_and_clear_or_interrupt": "stop_circle",
+        "kitten": "link",
+        "kitten.ctrl+shift+p": "text_select_start",
+        "kitten.ctrl+shift+o": "folder_open",
+    },
+    "claude": {
+        "clear_screen": "clear_all",
+        "permission_mode": "admin_panel_settings",
+        "expand_output": "unfold_more",
+    },
+    "discord": {
+        "toggle_mute": "volume_off",
+        "toggle_video": "videocam",
+        "toggle_voice": "record_voice_over",
+        "toggle_typing": "keyboard",
+        "toggle_screen_share": "screen_share",
+        "toggle_reaction": "add_reaction",
+        "toggle_voice_chat": "headset_mic",
+        "toggle_voice_mute": "mic_off",
+        "toggle_voice_typing": "keyboard_voice",
+    },
+    "telegram-desktop_telegram-desktop": {
+        "toggle_sidebar": "menu_open",
+        "toggle_fullscreen": "fullscreen",
+        "toggle_dark_mode": "dark_mode",
+        "copy_link": "link",
+        "paste": "content_paste",
+        "delete_message": "delete",
+        "reply": "reply",
+        "search": "search",
+        "mute_group": "notifications_off",
+        "mark_read": "mark_chat_read",
+    },
+    "WhatsApp Desktop": {
+        "new_chat": "add_comment",
+        "send_message": "send",
+        "copy_text": "content_copy",
+        "paste_text": "content_paste",
+        "delete_message": "delete",
+        "toggle_mute": "volume_off",
+        "toggle_notifications": "notifications",
+        "refresh": "refresh",
+        "minimize": "minimize",
+        "close": "close",
+    },
+    # Only what OrcaSlicer ships no art of; everything else on that page is Orca's own SVG.
+    "orca": {
+        "new_project": "note_add",
+        "import_geometry_data_from_stl_step_3mf_obj_amf_files": "file_open",
+        "export_plate_sliced_file": "download",
+        "slice_plate": "layers",
+        "print_plate": "print",
+        "preferences": "settings",
+        "show_hide_3dconnexion_devices_settings_dialog": "mouse",
+        "switch_table_page": "swap_horiz",
+        "delete_selected": "delete",
+    },
+    # Onshape draws these two with the view cube, not with a toolbar icon.
+    "onshape": {
+        "isometric": "deployed_code",
+        "front_view": "crop_square",
+    },
 }
 
 
@@ -388,9 +498,14 @@ def render_file(
     return buf.getvalue()
 
 
+def safe(part: str) -> str:
+    """The same folder name `icons.app_art_path` looks under, so the art is found."""
+    return "".join(c if c.isalnum() or c in "-._" else "_" for c in part)[:64]
+
+
 def write_all(app: str, jobs: dict[str, Path], size: int, tint=None, sheet=None,
               auto_light: bool = False) -> int:
-    out_dir = ART / app
+    out_dir = ART / safe(app)
     out_dir.mkdir(parents=True, exist_ok=True)
     written, failed = [], []
     for action, source in sorted(jobs.items()):
@@ -398,7 +513,7 @@ def write_all(app: str, jobs: dict[str, Path], size: int, tint=None, sheet=None,
         if png is None:
             failed.append(action)
             continue
-        path = out_dir / f"{action}.png"
+        path = out_dir / f"{safe(action)}.png"
         path.write_bytes(png)
         written.append(path)
     print(f"wrote   {len(written)} icons to {out_dir}")
